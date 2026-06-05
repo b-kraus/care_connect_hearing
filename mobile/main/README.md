@@ -41,7 +41,7 @@ Resolve any issues it reports before continuing.
  
 ### 2. Navigate into the Flutter folder
  
-    cd care_connect_hearing/mobile_flutter
+    cd care_connect_hearing/mobile/main
  
 ### 3. Install dependencies
  
