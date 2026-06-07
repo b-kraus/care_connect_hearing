@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'record_message_screen.dart';
 
 class ReadMessageScreen extends StatefulWidget {
   const ReadMessageScreen({super.key});
@@ -81,6 +82,12 @@ class _ReadMessageScreenState extends State<ReadMessageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context) => const RecordMessageScreen())); },
+        backgroundColor: const Color(0xFF1565C0),
+        icon: const Icon(Icons.edit, color: Colors.white),
+        label: const Text('New Message', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+      ),
       backgroundColor: const Color(0xFF000000),
       appBar: AppBar(
         backgroundColor: const Color(0xFF000000),
