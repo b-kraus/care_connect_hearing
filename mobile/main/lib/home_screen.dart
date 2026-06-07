@@ -2,6 +2,7 @@ import 'package:care_connect_hearing/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'log_screen.dart';
 import 'emergency_alert_screen.dart';
+import 'read_message_screen.dart';
 import 'active_alert_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _screens = [
       _buildHomeDashboard(),
-      _buildPlaceholderScreen('Messages Screen'),
+      const ReadMessageScreen(),
       const LogScreen(),
       const SettingsScreen(),
     ];
