@@ -2,6 +2,7 @@ import 'package:care_connect_hearing/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'log_screen.dart';
 import 'emergency_alert_screen.dart';
+import 'active_alert_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -97,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text('Saturday, June 6', style: TextStyle(color: Colors.grey.shade400, fontSize: 16)),
                       const SizedBox(height: 16),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context) => const ActiveAlertScreen())); },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF1565C0),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
