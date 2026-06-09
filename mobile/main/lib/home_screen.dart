@@ -1,6 +1,7 @@
 import 'package:care_connect_hearing/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'log_screen.dart'; 
+import 'emergency_alert_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -182,27 +183,36 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 
                 // Red Floating Emergency Contact Node
-                Container(
-                  width: 130,
-                  height: 130,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFC62828),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.warning_amber_rounded, color: Colors.white, size: 36),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Emergency'.toUpperCase(),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
+                GestureDetector(
+                  onTap: () {
+                    print('Red button clicked!');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const EmergencyAlertScreen()),
+                    );
+                  },
+                  child: Container(
+                    width: 130,
+                    height: 130,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFC62828),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.warning_amber_rounded, color: Colors.white, size: 36),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Emergency'.toUpperCase(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],

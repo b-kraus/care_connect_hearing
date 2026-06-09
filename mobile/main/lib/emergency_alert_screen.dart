@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'state/alert_provider.dart';
 
 class EmergencyAlertScreen extends StatelessWidget {
   const EmergencyAlertScreen({super.key});
@@ -44,7 +46,7 @@ class EmergencyAlertScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 48),
 
-                  // 1. SLIDER CONSTRAINTS FIXED BELOW
+                 
                   Container(
                     width: double.infinity,
                     constraints: const BoxConstraints(maxWidth: 450), // Fixed named parameter
@@ -57,6 +59,9 @@ class EmergencyAlertScreen extends StatelessWidget {
                       key: const Key('sos_slider_key'),
                       direction: DismissDirection.startToEnd,
                       onDismissed: (direction) {
+                        //sends the log to the Provider
+                        context.read<AlertProvider>().addLog('SOS Emergency Alert Dispatched!');
+                        
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('SOS Emergency Alert Dispatched!'),
@@ -105,14 +110,14 @@ class EmergencyAlertScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
 
-                  // 2. CANCEL BUTTON CONSTRAINTS FIXED BELOW
+                  
                   Container(
                     width: double.infinity,
                     constraints: const BoxConstraints(maxWidth: 450), // Fixed named parameter
                     height: 60, 
                     child: OutlinedButton(
                       onPressed: () {
-                        Navigator.pop(context); // Safely returns to Home Dashboard
+                        Navigator.pop(context); // returns to Home Dashboard
                       },
                       style: OutlinedButton.styleFrom(
                         side: const BorderSide(color: Colors.white, width: 2),

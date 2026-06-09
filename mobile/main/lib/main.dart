@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; 
 import 'onboarding_screen.dart'; // Import the onboarding screen script
+import 'state/alert_provider.dart';
 
 void main() {
-  runApp(const CareConnectApp());
+  runApp(
+  
+    ChangeNotifierProvider(
+      create: (context) => AlertProvider(),
+      child: const CareConnectApp(),
+    ),
+  );
 }
 
 class CareConnectApp extends StatelessWidget {
