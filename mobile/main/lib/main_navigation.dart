@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'alert_model.dart';
 import 'home_screen.dart';
 import 'log_screen.dart';
+import 'read_message_screen.dart';
+import 'settings_screen.dart';
 
 class MainNavigationShell extends StatefulWidget {
   const MainNavigationShell({super.key});
@@ -64,9 +66,9 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
         alerts: _liveAlerts,
         onConfirmToggle: _toggleAlertConfirmation,
       ),
-      const Center(child: Text('Messages Screen', style: TextStyle(color: Colors.white, fontSize: 18))),
+      const ReadMessageScreen(),
       LogScreen(alerts: _liveAlerts), // Feeds live elements down to history canvas directly
-      const Center(child: Text('Settings Screen', style: TextStyle(color: Colors.white, fontSize: 18))),
+      const SettingsScreen(),
     ];
 
     return Scaffold(
