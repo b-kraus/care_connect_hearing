@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'state/alert_provider.dart';
 
 // Data model structural logic for managing filtered collections cleanly
 class AlertLogItem {
@@ -99,6 +101,7 @@ class _LogScreenState extends State<LogScreen> {
         ),
         body: Column(
           children: [
+            _buildLatestActivityBanner(),
             _buildToggleHeader(),
             _buildFilterChips(),
 
@@ -146,7 +149,78 @@ class _LogScreenState extends State<LogScreen> {
       ),
     );
   }
-
+Widget _buildLatestActivityBanner() {
+    return Consumer<AlertProvider>(
+      builder: (context, alertProvider, child) {
+        final logs = alertProvider.logs;
+        if (logs.isEmpty) {
+          return Container(
+            margin: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(12.0),
+            decoration: BoxDecoration(
+              color: const Color(0xFF161616),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: const Color(0xFFFFD600), width: 1),
+            ),
+            child: Row(
+              children: const [
+                Icon(Icons.notifications_none, color: Color(0xFFFFD600), size: 20),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'No live events yet. Trigger SOS to see live activity here.',
+                    style: TextStyle(color: Colors.grey, fontSize: 13),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+        final latest = logs.last;
+        return Container(
+          margin: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(12.0),
+          decoration: BoxDecoration(
+            color: const Color(0xFF161616),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: const Color(0xFFFFD600), width: 2),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.notifications_active, color: Color(0xFFFFD600), size: 20),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'LATEST ACTIVITY',
+                    style: TextStyle(
+                      color: Color(0xFFFFD600),
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.0,
+                    ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    '${logs.length} ${logs.length == 1 ? "event" : "events"}',
+                    style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                latest,
+                style: const TextStyle(color: Color(0xFFFFD600), fontSize: 14, fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+  
+  
   Widget _buildToggleHeader() {
     return Container(
       color: const Color(0xFF161616),
