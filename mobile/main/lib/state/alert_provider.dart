@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 
-class AlertLogEntry {
-  final String id;
-  final String title;
-  final String status; // 'Active', 'Confirmed', 'Missed', 'Acknowledged'
-
-  AlertLogEntry({required this.id, required this.title, required this.status});
-}
-
 class AlertProvider extends ChangeNotifier {
   final List<String> _logs = [];
   final List<Map<String, dynamic>> _activeHomeAlerts = [];
 
   List<String> get logs => List.unmodifiable(_logs);
   List<Map<String, dynamic>> get activeHomeAlerts => _activeHomeAlerts;
+
+  /// General system event addition method 
+  void addLog(String message) {
+    _logs.add(message);
+    notifyListeners();
+  }
 
   /// Trigger a brand new alert onto the home screen system
   void addAlert(String id, String title) {
@@ -26,24 +24,24 @@ class AlertProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// 1. CONFIRM: Logs the event, then completely removes it from the home screen
+  /// CONFIRM: Logs the event, then completely removes it from the home screen
   void logConfirmedAlert(String id, String alertDetails) {
     _logs.add('Confirmed: $alertDetails');
     _activeHomeAlerts.removeWhere((item) => item['id'] == id); 
     notifyListeners(); 
   }
 
-  /// 2. SYSTEM TIMEOUT: Flags an active alert as MISSED on the home screen
+  /// SYSTEM TIMEOUT: Flags an active alert as MISSED on the home screen
   void flagAlertAsMissed(String id) {
     final index = _activeHomeAlerts.indexWhere((item) => item['id'] == id);
     if (index != -1) {
       _activeHomeAlerts[index]['isMissed'] = true;
       _logs.add('Missed: ${_activeHomeAlerts[index]['title']}');
-      notifyListeners();
+      notifyListeners(); 
     }
   }
 
-  /// 3. ACKNOWLEDGE MISSED: Removes it from home view, but history retains the 'Missed' log
+  /// ACKNOWLEDGE MISSED: Removes it from home view, but history retains the 'Missed' log
   void acknowledgeMissedAlert(String id) {
     _activeHomeAlerts.removeWhere((item) => item['id'] == id);
     notifyListeners();
