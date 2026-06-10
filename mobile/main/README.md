@@ -16,7 +16,11 @@ Care Connect Hearing helps caregivers, patients, and family members communicate,
  
 - **Onboarding** — Welcome screen with accessible defaults already enabled and a guided setup option
 - **Home / Dashboard** — Daily home base showing alerts grouped by status, with bottom navigation
- 
+- **Active Alert Screen** - Daily alert screen that appears to the user 
+- **Emergency Alert Screen** - When the user hits the emergency alert button on the home screen, this screen appears with two buttons allowing them to contact emergency services
+- **Log Screen** - A log of all alerts that appear to the user for future reference
+- **Read Message Screen** - the screen that appears when the user is reading the message that appears after speech to text
+- **Record Message Screen** - The screen that appears when the user is using the record side of the speech to text
 Navigation between screens is implemented. Tapping "Start Guided Setup" or "Use Default Settings" on Onboarding navigates to the Home screen. The back arrow on Home returns to Onboarding.
  
 ## Prerequisites
