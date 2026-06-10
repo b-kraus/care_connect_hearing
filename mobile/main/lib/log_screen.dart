@@ -2,21 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'state/alert_provider.dart';
 
-// Data model structural logic for managing filtered collections cleanly
-class AlertLogItem {
-  final String title;
-  final String time;
-  final String dateSection; // e.g., 'TODAY', 'YESTERDAY', 'MAY 28'
-  final bool isConfirmed;
-
-  const AlertLogItem({
-    required this.title,
-    required this.time,
-    required this.dateSection,
-    required this.isConfirmed,
-  });
-}
-
 class LogScreen extends StatefulWidget {
   const LogScreen({super.key});
 
@@ -26,18 +11,8 @@ class LogScreen extends StatefulWidget {
 
 class _LogScreenState extends State<LogScreen> {
   bool _isFamilyView = false;
-  String _activeFilter = 'All'; // Active state engine track: 'All', 'Confirmed', 'Missed'
+  String _activeFilter = 'All'; // Track active view state: 'All', 'Confirmed', 'Missed'
   final ScrollController _logScrollController = ScrollController();
-
-  // Master Alert Log Database
-  final List<AlertLogItem> _masterAlerts = const [
-    AlertLogItem(title: 'Take blue pill', time: '8:00 AM', dateSection: 'TODAY', isConfirmed: true),
-    AlertLogItem(title: 'Morning walk', time: '7:00 AM', dateSection: 'TODAY', isConfirmed: false),
-    AlertLogItem(title: 'Blood pressure check', time: '6:30 AM', dateSection: 'TODAY', isConfirmed: true),
-    AlertLogItem(title: 'Take red capsule', time: '9:00 PM', dateSection: 'YESTERDAY', isConfirmed: true),
-    AlertLogItem(title: 'Evening walk', time: '6:00 PM', dateSection: 'YESTERDAY', isConfirmed: false),
-    AlertLogItem(title: 'Take blue pill', time: '8:00 AM', dateSection: 'MAY 28', isConfirmed: true),
-  ];
 
   @override
   void dispose() {
@@ -45,24 +20,11 @@ class _LogScreenState extends State<LogScreen> {
     super.dispose();
   }
 
-  // Helper system to isolate active items dynamically based on chosen criteria
-  List<AlertLogItem> _getFilteredAlerts() {
-    if (_activeFilter == 'Confirmed') {
-      return _masterAlerts.where((alert) => alert.isConfirmed).toList();
-    } else if (_activeFilter == 'Missed') {
-      return _masterAlerts.where((alert) => !alert.isConfirmed).toList();
-    }
-    return _masterAlerts;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final filteredList = _getFilteredAlerts();
-
     return Theme(
       data: Theme.of(context).copyWith(
         scrollbarTheme: ScrollbarThemeData(
-          // Satisfies the strict state requirement wrapper types in newer Flutter SDK distributions
           thumbColor: WidgetStateProperty.all(Colors.grey.shade600),
           thickness: WidgetStateProperty.all(6.0),
           radius: const Radius.circular(4),
@@ -73,7 +35,7 @@ class _LogScreenState extends State<LogScreen> {
         appBar: AppBar(
           backgroundColor: const Color(0xFF000000),
           elevation: 0,
-          automaticallyImplyLeading: false, // Disables standard leading back button
+          automaticallyImplyLeading: false, 
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -99,127 +61,145 @@ class _LogScreenState extends State<LogScreen> {
             child: Container(color: const Color(0xFFFFD600), height: 2),
           ),
         ),
-        body: Column(
-          children: [
-            _buildLatestActivityBanner(),
-            _buildToggleHeader(),
-            _buildFilterChips(),
+        body: Consumer<AlertProvider>(
+          builder: (context, alertProvider, child) {
+            // 1. Filter the logs dynamically based on the string prefix
+            final allLogs = alertProvider.logs;
+            
+            final filteredLogs = allLogs.where((log) {
+              if (_activeFilter == 'Confirmed') {
+                return log.startsWith('Confirmed:');
+              } else if (_activeFilter == 'Missed') {
+                return log.startsWith('Missed:');
+              }
+              // 'All' displays both Confirmed and Missed entries, ignoring raw system entries
+              return log.startsWith('Confirmed:') || log.startsWith('Missed:');
+            }).toList();
 
-            // Dynamic Scrollable Item Canvas Block
-            Expanded(
-              child: Scrollbar(
-                controller: _logScrollController,
-                thumbVisibility: true,
-                child: filteredList.isEmpty
-                    ? const Center(
-                        child: Text(
-                          'No matching alerts found',
-                          style: TextStyle(color: Colors.grey, fontSize: 16),
-                        ),
-                      )
-                    : ListView.builder(
-                        controller: _logScrollController,
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        itemCount: filteredList.length,
-                        itemBuilder: (context, index) {
-                          final alert = filteredList[index];
+            return Column(
+              children: [
+                _buildLatestActivityBanner(allLogs),
+                _buildToggleHeader(),
+                _buildFilterChips(),
 
-                          // Shows section headers dynamically if the current index is first 
-                          // or if the element context date changes relative to the prior entry block
-                          bool showHeader = index == 0 || 
-                              filteredList[index - 1].dateSection != alert.dateSection;
+                // Scrollable Dynamic Canvas List
+                Expanded(
+                  child: Scrollbar(
+                    controller: _logScrollController,
+                    thumbVisibility: true,
+                    child: filteredLogs.isEmpty
+                        ? Center(
+                            child: Text(
+                              'No matching $_activeFilter alerts found',
+                              style: const TextStyle(color: Colors.grey, fontSize: 16),
+                            ),
+                          )
+                        : ListView.builder(
+                            controller: _logScrollController,
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            itemCount: filteredLogs.length,
+                            itemBuilder: (context, index) {
+                              final rawLog = filteredLogs[index];
+                              
+                              // Check the real status of this specific app-generated log
+                              final bool isConfirmed = rawLog.startsWith('Confirmed:');
+                              
+                              // Strip off the prefix indicator tags cleanly for the text rendering title
+                              final displayTitle = rawLog
+                                  .replaceAll('Confirmed: ', '')
+                                  .replaceAll('Missed: ', '');
 
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (showHeader) _buildSectionHeader(alert.dateSection),
-                              _buildLogTile(
-                                title: alert.title,
-                                time: alert.time,
-                                isConfirmed: alert.isConfirmed,
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-              ),
-            ),
-          ],
+                              bool showHeader = (index == 0);
+
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (showHeader) _buildSectionHeader('TODAY'),
+                                  _buildLogTile(
+                                    title: displayTitle,
+                                    time: 'Just Now', 
+                                    isConfirmed: isConfirmed, // Dynamic color and icons match status
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
   }
-Widget _buildLatestActivityBanner() {
-    return Consumer<AlertProvider>(
-      builder: (context, alertProvider, child) {
-        final logs = alertProvider.logs;
-        if (logs.isEmpty) {
-          return Container(
-            margin: const EdgeInsets.all(16.0),
-            padding: const EdgeInsets.all(12.0),
-            decoration: BoxDecoration(
-              color: const Color(0xFF161616),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: const Color(0xFFFFD600), width: 1),
-            ),
-            child: Row(
-              children: const [
-                Icon(Icons.notifications_none, color: Color(0xFFFFD600), size: 20),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    'No live events yet. Trigger SOS to see live activity here.',
-                    style: TextStyle(color: Colors.grey, fontSize: 13),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-        final latest = logs.last;
-        return Container(
-          margin: const EdgeInsets.all(16.0),
-          padding: const EdgeInsets.all(12.0),
-          decoration: BoxDecoration(
-            color: const Color(0xFF161616),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: const Color(0xFFFFD600), width: 2),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const Icon(Icons.notifications_active, color: Color(0xFFFFD600), size: 20),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'LATEST ACTIVITY',
-                    style: TextStyle(
-                      color: Color(0xFFFFD600),
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.0,
-                    ),
-                  ),
-                  const Spacer(),
-                  Text(
-                    '${logs.length} ${logs.length == 1 ? "event" : "events"}',
-                    style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
-                  ),
-                ],
+
+  Widget _buildLatestActivityBanner(List<String> logs) {
+    if (logs.isEmpty) {
+      return Container(
+        margin: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(12.0),
+        decoration: BoxDecoration(
+          color: const Color(0xFF161616),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: const Color(0xFFFFD600), width: 1),
+        ),
+        child: Row(
+          children: const [
+            Icon(Icons.notifications_none, color: Color(0xFFFFD600), size: 20),
+            SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                'No live events yet. Trigger alerts to see activity here.',
+                style: TextStyle(color: Colors.grey, fontSize: 13),
               ),
-              const SizedBox(height: 8),
+            ),
+          ],
+        ),
+      );
+    }
+    
+    final latest = logs.last;
+    return Container(
+      margin: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(12.0),
+      decoration: BoxDecoration(
+        color: const Color(0xFF161616),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: const Color(0xFFFFD600), width: 2),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.notifications_active, color: Color(0xFFFFD600), size: 20),
+              const SizedBox(width: 8),
+              const Text(
+                'LATEST ACTIVITY',
+                style: TextStyle(
+                  color: Color(0xFFFFD600),
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.0,
+                ),
+              ),
+              const Spacer(),
               Text(
-                latest,
-                style: const TextStyle(color: Color(0xFFFFD600), fontSize: 14, fontWeight: FontWeight.w600),
+                '${logs.length} ${logs.length == 1 ? "event" : "events"}',
+                style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
               ),
             ],
           ),
-        );
-      },
+          const SizedBox(height: 8),
+          Text(
+            latest,
+            style: const TextStyle(color: Color(0xFFFFD600), fontSize: 14, fontWeight: FontWeight.w600),
+          ),
+        ],
+      ),
     );
   }
-  
   
   Widget _buildToggleHeader() {
     return Container(
