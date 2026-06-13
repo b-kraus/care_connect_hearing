@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Pressable, StatusBar, SafeAreaView } from 'react-native';
+import { router } from 'expo-router';
 
 export default function OnboardingScreen() {
   const [isRouted, setIsRouted] = useState(false);
@@ -39,7 +40,7 @@ export default function OnboardingScreen() {
             styles.primaryButton,
             pressed && styles.buttonPressed
           ]} 
-          onPress={() => setIsRouted(true)}
+          onPress={() => router.push('/home')}
         >
           <Text style={styles.primaryButtonText}>Start Guided Setup</Text>
         </Pressable>
@@ -49,7 +50,7 @@ export default function OnboardingScreen() {
             styles.secondaryButton,
             pressed && styles.buttonPressed
           ]} 
-          onPress={() => setIsRouted(true)}
+          onPress={() => router.push('/home')}
         >
           <Text style={styles.secondaryButtonText}>Use Default Settings</Text>
         </Pressable>
