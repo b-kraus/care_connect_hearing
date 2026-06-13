@@ -1,98 +1,132 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, Pressable, StatusBar, SafeAreaView } from 'react-native';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+export default function OnboardingScreen() {
+  const [isRouted, setIsRouted] = useState(false);
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
+  // If a button is clicked, render a completely blank screen
+  if (isRouted) {
     return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
+      <SafeAreaView style={styles.blankScreen}>
+        <StatusBar barStyle="light-content" />
+        {/* Blank screen content */}
+      </SafeAreaView>
     );
   }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
+
   return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="light-content" />
+      <View style={styles.container}>
+        {/* Title */}
+        <Text style={styles.title}>
+          Welcome to Care{'\n'}Connect Hearing
+        </Text>
 
-export default function HomeScreen() {
-  return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
+        {/* Subtitle */}
+        <Text style={styles.subtitle}>
+          Large text, high contrast, and visual + vibration alerts are already on. You can change anything later in Settings.
+        </Text>
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
+        {/* Blue Pill Container */}
+        <View style={styles.pillContainer}>
+          <Text style={styles.pillText}>⚡ Take blue pill</Text>
+        </View>
 
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
+        {/* Action Buttons */}
+        <Pressable 
+          style={({ pressed }) => [
+            styles.primaryButton,
+            pressed && styles.buttonPressed
+          ]} 
+          onPress={() => setIsRouted(true)}
+        >
+          <Text style={styles.primaryButtonText}>Start Guided Setup</Text>
+        </Pressable>
 
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+        <Pressable 
+          style={({ pressed }) => [
+            styles.secondaryButton,
+            pressed && styles.buttonPressed
+          ]} 
+          onPress={() => setIsRouted(true)}
+        >
+          <Text style={styles.secondaryButtonText}>Use Default Settings</Text>
+        </Pressable>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
   safeArea: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
+    backgroundColor: '#000000',
   },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
+  container: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
+    backgroundColor: '#000000',
+    padding: 24,
+    justifyContent: 'center',
+  },
+  blankScreen: {
+    flex: 1,
+    backgroundColor: '#000000', // Matches the app's dark background theme
   },
   title: {
+    color: '#FFD600',
+    fontSize: 32,
+    fontWeight: 'bold',
     textAlign: 'center',
+    marginBottom: 32,
   },
-  code: {
-    textTransform: 'uppercase',
+  subtitle: {
+    color: '#FFD600',
+    fontSize: 18,
+    textAlign: 'center',
+    marginBottom: 32,
+    lineHeight: 26,
   },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+  pillContainer: {
+    backgroundColor: '#FFD600',
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 48,
+    alignItems: 'center',
+  },
+  pillText: {
+    color: '#000000',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  primaryButton: {
+    backgroundColor: '#1565C0',
+    height: 56,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  primaryButtonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  secondaryButton: {
+    backgroundColor: '#FFFFFF',
+    height: 56,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#1565C0',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  secondaryButtonText: {
+    color: '#1565C0',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  buttonPressed: {
+    opacity: 0.8, // Visual feedback overlay when clicking down on the buttons
   },
 });
