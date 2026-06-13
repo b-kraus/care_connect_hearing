@@ -12,7 +12,7 @@ export default function HomeScreen() {
       {/* App Header Bar */}
       <View style={styles.header}>
         <Text style={styles.appTitle}>Care Connect Hearing</Text>
-        <Pressable onPress={() => {}} style={styles.settingsButton}>
+        <Pressable onPress={() => router.push("/read-message")} style={styles.settingsButton}>
           <Text style={styles.settingsIcon}>⚙️</Text>
         </Pressable>
       </View>
