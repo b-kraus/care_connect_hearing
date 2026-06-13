@@ -1,4 +1,5 @@
 import React from 'react';
+import { router } from 'expo-router';
 import { View, Text, Pressable, StyleSheet, ScrollView, SafeAreaView, Dimensions } from 'react-native';
 
 const { width } = Dimensions.get('window');
@@ -25,7 +26,7 @@ export default function HomeScreen() {
             
             <Pressable
               style={({ pressed }) => [styles.demoButton, pressed && styles.buttonPressed]}
-              onPress={() => {}}
+              onPress={() => router.push("/active-alert")}
             >
               <Text style={styles.demoButtonText}>Demo Alert Overlay</Text>
             </Pressable>
@@ -34,7 +35,7 @@ export default function HomeScreen() {
           {/* Large Circular Emergency Action Button */}
           <Pressable
             style={({ pressed }) => [styles.emergency, pressed && styles.buttonPressed]}
-            onPress={() => {}}
+            onPress={() => router.push("/emergency")}
           >
             <Text style={styles.emergencyIcon}>⚠️</Text>
             <Text style={styles.emergencyText}>EMERGENCY</Text>
