@@ -1,112 +1,145 @@
-import React from 'react';
-import { router } from 'expo-router';
-import { View, Text, Pressable, StyleSheet, ScrollView, SafeAreaView, Dimensions } from 'react-native';
-
-const { width } = Dimensions.get('window');
-// Calculate card width for a perfect 2-column grid balance minus padding and gaps
-const cardWidth = (width - 48 - 16) / 2; 
+import React, { useState } from 'react';
+import { View, Text, Pressable, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
+import { useAlertState } from './_layout'; 
+import SettingsScreen from './settings';
+import LogScreen from './log';
+import ActiveAlertScreen from './active-alert';
+import EmergencyAlertScreen from './emergency';
+import ReadMessageScreen from './read-message';
 
 export default function HomeScreen() {
+  const [activeTab, setActiveTab] = useState<'home' | 'messages' | 'log' | 'settings'>('home');
+  const [focusedAlertId, setFocusedAlertId] = useState<string | null>(null);
+  const [showEmergencyOverlay, setShowEmergencyOverlay] = useState(false);
+  const { alerts, triggerDemoAlert } = useAlertState();
+
+  const activeNow = alerts.filter(a => a.status === 'ACTIVE_NOW');
+  const awaiting = alerts.filter(a => a.status === 'AWAITING_CONFIRMATION');
+  const missed = alerts.filter(a => a.status === 'MISSED');
+  const completedCount = alerts.filter(a => a.status === 'CONFIRMED' && a.dateGroup === 'Today').length;
+
+  const displayTabBody = () => {
+    switch (activeTab) {
+      case 'settings': 
+        return <SettingsScreen />;
+      case 'log': 
+        return <LogScreen />;
+      case 'messages': 
+        return <ReadMessageScreen />;
+      case 'home':
+      default:
+        return (
+          <ScrollView style={styles.scrollWrapper} showsVerticalScrollIndicator={false}>
+            <View style={styles.heroLayout}>
+              <View style={styles.identityBlock}>
+                <Text style={styles.headingText}>Good afternoon,{"\n"}Marcus</Text>
+                <Text style={styles.dateLabel}>Saturday, June 6</Text>
+                
+                <Pressable
+                  style={({ pressed }) => [styles.demoBtn, pressed && styles.btnPressed]}
+                  onPress={() => {
+                    triggerDemoAlert();
+                    setTimeout(() => {
+                      const updatedActives = alerts.filter(a => a.status === 'ACTIVE_NOW');
+                      if (updatedActives.length > 0) setFocusedAlertId(updatedActives[0].id);
+                    }, 60);
+                  }}
+                >
+                  <Text style={styles.demoBtnText}>Simulate High-Priority Alert</Text>
+                </Pressable>
+              </View>
+
+              <Pressable 
+                style={({ pressed }) => [styles.emergencyCircle, pressed && styles.btnPressed]} 
+                onPress={() => setShowEmergencyOverlay(true)}
+              >
+                <Text style={styles.emergencyIcon}>⚠️</Text>
+                <Text style={styles.emergencyText}>EMERGENCY</Text>
+              </Pressable>
+            </View>
+
+            <View style={styles.dashboardSplitGrid}>
+              <View style={styles.gridColumn}>
+                <Text style={styles.columnHeader}>Active Now</Text>
+                {activeNow.map(item => (
+                  <Pressable key={item.id} style={[styles.card, { borderLeftColor: '#2E7D32' }]} onPress={() => setFocusedAlertId(item.id)}>
+                    <Text style={styles.cardTitle} numberOfLines={2}>{item.title}</Text>
+                    <Text style={styles.cardTime}>{item.time}</Text>
+                    <View style={[styles.badge, { backgroundColor: '#2E7D32' }]}><Text style={styles.badgeText}>Active Now</Text></View>
+                    <Text style={styles.cardAuthor}>{item.setBy}</Text>
+                  </Pressable>
+                ))}
+
+                <Text style={styles.columnHeader}>Awaiting Confirmation</Text>
+                {awaiting.map(item => (
+                  <Pressable key={item.id} style={[styles.card, { borderLeftColor: '#EF6C00' }]} onPress={() => setFocusedAlertId(item.id)}>
+                    <Text style={styles.cardTitle} numberOfLines={2}>{item.title}</Text>
+                    <Text style={styles.cardTime}>{item.time}</Text>
+                    <View style={[styles.badge, { backgroundColor: '#EF6C00' }]}><Text style={styles.badgeText}>Awaiting</Text></View>
+                    <Text style={styles.cardAuthor}>{item.setBy}</Text>
+                  </Pressable>
+                ))}
+              </View>
+
+              <View style={styles.gridColumn}>
+                <Text style={styles.columnHeader}>Missed</Text>
+                {missed.map(item => (
+                  <View key={item.id} style={[styles.card, { borderLeftColor: '#C62828' }]}>
+                    <Text style={styles.cardTitle} numberOfLines={2}>{item.title}</Text>
+                    <Text style={styles.cardTime}>{item.time}</Text>
+                    <View style={[styles.badge, { backgroundColor: '#C62828' }]}><Text style={styles.badgeText}>Missed</Text></View>
+                    <Text style={styles.cardAuthor}>{item.setBy}</Text>
+                  </View>
+                ))}
+
+                <Text style={styles.columnHeader}>Completed Today ({completedCount})</Text>
+              </View>
+            </View>
+            <View style={{ height: 40 }} />
+          </ScrollView>
+        );
+    }
+  };
+
   return (
-    <SafeAreaView style={styles.safeArea}>
-      {/* App Header Bar */}
-      <View style={styles.header}>
+    <SafeAreaView style={styles.viewViewport}>
+      <View style={styles.topAppBar}>
         <Text style={styles.appTitle}>Care Connect Hearing</Text>
-        <Pressable onPress={() => router.push("/read-message")} style={styles.settingsButton}>
-          <Text style={styles.settingsIcon}>⚙️</Text>
+        <Pressable onPress={() => setActiveTab('settings')} style={styles.settingsTapTarget}>
+          <Text style={[styles.settingsIconText, activeTab === 'settings' && styles.selectedColor]}>⚙️</Text>
         </Pressable>
       </View>
 
-      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        {/* Profile Greeting Section */}
-        <View style={styles.heroSection}>
-          <View style={styles.greetingContainer}>
-            <Text style={styles.greeting}>Good afternoon,{"\n"}Marcus</Text>
-            <Text style={styles.date}>Saturday, June 6</Text>
-            
-            <Pressable
-              style={({ pressed }) => [styles.demoButton, pressed && styles.buttonPressed]}
-              onPress={() => router.push("/active-alert")}
-            >
-              <Text style={styles.demoButtonText}>Demo Alert Overlay</Text>
-            </Pressable>
-          </View>
+      {displayTabBody()}
 
-          {/* Large Circular Emergency Action Button */}
-          <Pressable
-            style={({ pressed }) => [styles.emergency, pressed && styles.buttonPressed]}
-            onPress={() => router.push("/emergency")}
-          >
-            <Text style={styles.emergencyIcon}>⚠️</Text>
-            <Text style={styles.emergencyText}>EMERGENCY</Text>
-          </Pressable>
+      {focusedAlertId && (
+        <View style={StyleSheet.absoluteFill}>
+          <ActiveAlertScreen alertId={focusedAlertId} onClose={() => setFocusedAlertId(null)} />
         </View>
+      )}
 
-        {/* 2-Column Dashboard Task Grid */}
-        <View style={styles.gridContainer}>
-          
-          {/* Column 1: Active Now & Awaiting Confirmation */}
-          <View style={styles.gridColumn}>
-            <Text style={styles.sectionHeader}>Active Now</Text>
-            <View style={[styles.card, { borderLeftColor: '#2E7D32' }]}>
-              <Text style={styles.cardTitle} numberOfLines={2}>Take blue pill</Text>
-              <Text style={styles.cardTime}>6:00 PM</Text>
-              <View style={[styles.badge, { backgroundColor: '#2E7D32' }]}>
-                <Text style={styles.badgeText}>Active Now</Text>
-              </View>
-              <Text style={styles.setBy}>Set by Sarah</Text>
-            </View>
-
-            <Text style={styles.sectionHeader}>Awaiting Confirmation</Text>
-            <View style={[styles.card, { borderLeftColor: '#EF6C00' }]}>
-              <Text style={styles.cardTitle} numberOfLines={2}>Blood pressure check</Text>
-              <Text style={styles.cardTime}>5:30 PM</Text>
-              <View style={[styles.badge, { backgroundColor: '#EF6C00' }]}>
-                <Text style={styles.badgeText}>Awaiting Confirmation</Text>
-              </View>
-              <Text style={styles.setBy}>Set by Sarah</Text>
-            </View>
-          </View>
-
-          {/* Column 2: Missed & Completed Today */}
-          <View style={styles.gridColumn}>
-            <Text style={styles.sectionHeader}>Missed</Text>
-            <View style={[styles.card, { borderLeftColor: '#C62828' }]}>
-              <Text style={styles.cardTitle} numberOfLines={2}>Physical therapy session</Text>
-              <Text style={styles.cardTime}>2:00 PM</Text>
-              <View style={[styles.badge, { backgroundColor: '#C62828' }]}>
-                <Text style={styles.badgeText}>Missed</Text>
-              </View>
-              <Text style={styles.setBy}>Set by Sarah</Text>
-            </View>
-
-            <Text style={styles.sectionHeader}>Completed Today (2)</Text>
-            {/* Cards can be dynamically appended here */}
-          </View>
-
+      {showEmergencyOverlay && (
+        <View style={StyleSheet.absoluteFill}>
+          <EmergencyAlertScreen onClose={() => setShowEmergencyOverlay(false)} />
         </View>
+      )}
 
-        {/* Extra spacing helper at base for smooth scroll ranges */}
-        <View style={{ height: 60 }} />
-      </ScrollView>
-
-      {/* Persistent Bottom Tab Bar Component Simulation */}
-      <View style={styles.bottomTabBar}>
-        <Pressable style={styles.tabItem}>
-          <Text style={[styles.tabIcon, styles.activeTabColor]}>🏠</Text>
-          <Text style={[styles.tabLabel, styles.activeTabColor]}>Home</Text>
+      <View style={styles.navigationDock}>
+        <Pressable style={styles.dockItem} onPress={() => setActiveTab('home')}>
+          <Text style={[styles.dockIcon, activeTab === 'home' && styles.selectedColor]}>🏠</Text>
+          <Text style={[styles.dockLabel, activeTab === 'home' && styles.selectedColor]}>Home</Text>
         </Pressable>
-        <Pressable style={styles.tabItem}>
-          <Text style={styles.tabIcon}>💬</Text>
-          <Text style={styles.tabLabel}>Messages</Text>
+        <Pressable style={styles.dockItem} onPress={() => setActiveTab('messages')}>
+          <Text style={[styles.dockIcon, activeTab === 'messages' && styles.selectedColor]}>💬</Text>
+          <Text style={[styles.dockLabel, activeTab === 'messages' && styles.selectedColor]}>Messages</Text>
         </Pressable>
-        <Pressable style={styles.tabItem}>
-          <Text style={styles.tabIcon}>📋</Text>
-          <Text style={styles.tabLabel}>Log</Text>
+        <Pressable style={styles.dockItem} onPress={() => setActiveTab('log')}>
+          <Text style={[styles.dockIcon, activeTab === 'log' && styles.selectedColor]}>📋</Text>
+          <Text style={[styles.dockLabel, activeTab === 'log' && styles.selectedColor]}>Log</Text>
         </Pressable>
-        <Pressable style={styles.tabItem}>
-          <Text style={styles.tabIcon}>⚙️</Text>
-          <Text style={styles.tabLabel}>Settings</Text>
+        <Pressable style={styles.dockItem} onPress={() => setActiveTab('settings')}>
+          <Text style={[styles.dockIcon, activeTab === 'settings' && styles.selectedColor]}>⚙️</Text>
+          <Text style={[styles.dockLabel, activeTab === 'settings' && styles.selectedColor]}>Settings</Text>
         </Pressable>
       </View>
     </SafeAreaView>
@@ -114,172 +147,35 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#000000',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-    paddingVertical: 16,
-    backgroundColor: '#000000',
-  },
-  appTitle: {
-    color: '#FFD600',
-    fontSize: 22,
-    fontWeight: 'bold',
-  },
-  settingsButton: {
-    padding: 4,
-  },
-  settingsIcon: {
-    fontSize: 22,
-    color: '#FFD600',
-  },
-  container: {
-    flex: 1,
-    paddingHorizontal: 24,
-  },
-  heroSection: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 24,
-    width: '100%',
-  },
-  greetingContainer: {
-    flex: 1,
-    paddingRight: 8,
-  },
-  greeting: {
-    color: '#FFD600',
-    fontSize: 32,
-    fontWeight: 'bold',
-    lineHeight: 38,
-  },
-  date: {
-    color: '#aaa',
-    fontSize: 16,
-    marginTop: 8,
-    marginBottom: 16,
-  },
-  demoButton: {
-    backgroundColor: '#1565C0',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    alignSelf: 'flex-start',
-  },
-  demoButtonText: {
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-    fontSize: 15,
-  },
-  emergency: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: '#C62828',
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  emergencyIcon: {
-    fontSize: 32,
-    marginBottom: 2,
-  },
-  emergencyText: {
-    color: '#FFFFFF',
-    fontSize: 11,
-    fontWeight: 'bold',
-    letterSpacing: 0.5,
-  },
-  gridContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
-  gridColumn: {
-    width: cardWidth,
-  },
-  sectionHeader: {
-    color: '#FFD600',
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 12,
-    marginTop: 16,
-  },
-  card: {
-    backgroundColor: '#161616',
-    borderRadius: 12,
-    padding: 14,
-    marginBottom: 12,
-    borderLeftWidth: 6,
-    width: '100%',
-    minHeight: 140,
-    justifyContent: 'space-between',
-  },
-  cardTitle: {
-    color: '#FFD600',
-    fontSize: 18,
-    fontWeight: 'bold',
-    lineHeight: 22,
-  },
-  cardTime: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    marginTop: 4,
-  },
-  badge: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 4,
-    alignSelf: 'flex-start',
-    marginTop: 8,
-  },
-  badgeText: {
-    color: '#FFFFFF',
-    fontSize: 11,
-    fontWeight: 'bold',
-  },
-  setBy: {
-    color: '#888',
-    fontSize: 12,
-    marginTop: 6,
-  },
-  buttonPressed: {
-    opacity: 0.75,
-  },
-  bottomTabBar: {
-    flexDirection: 'row',
-    backgroundColor: '#161616',
-    height: 65,
-    borderTopWidth: 1,
-    borderTopColor: '#222',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    paddingBottom: 4,
-  },
-  tabItem: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  tabIcon: {
-    fontSize: 20,
-    color: '#888',
-  },
-  tabLabel: {
-    fontSize: 11,
-    color: '#888',
-    marginTop: 2,
-  },
-  activeTabColor: {
-    color: '#FFD600',
-  },
+  viewViewport: { flex: 1, backgroundColor: '#000000' },
+  topAppBar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 24, paddingVertical: 16, backgroundColor: '#000000' },
+  appTitle: { color: '#FFD600', fontSize: 22, fontWeight: 'bold' },
+  settingsTapTarget: { padding: 4 },
+  settingsIconText: { fontSize: 22, color: '#888' },
+  scrollWrapper: { flex: 1, paddingHorizontal: 16 },
+  emptyContainer: { flex: 1, backgroundColor: '#000000' },
+  heroLayout: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24, width: '100%' },
+  identityBlock: { flex: 1, paddingRight: 8 },
+  headingText: { color: '#FFD600', fontSize: 32, fontWeight: 'bold', lineHeight: 38 },
+  dateLabel: { color: '#aaa', fontSize: 16, marginTop: 8, marginBottom: 16 },
+  demoBtn: { backgroundColor: '#1565C0', paddingVertical: 12, paddingHorizontal: 16, borderRadius: 8, alignSelf: 'flex-start' },
+  demoBtnText: { color: '#FFFFFF', fontWeight: 'bold', fontSize: 15 },
+  emergencyCircle: { width: 110, height: 110, borderRadius: 55, backgroundColor: '#C62828', justifyContent: 'center', alignItems: 'center' },
+  emergencyIcon: { fontSize: 28, marginBottom: 2 },
+  emergencyText: { color: '#FFFFFF', fontSize: 10, fontWeight: 'bold' },
+  dashboardSplitGrid: { flexDirection: 'row', justifyContent: 'space-between', width: '100%', gap: 12 },
+  gridColumn: { flex: 1 }, 
+  columnHeader: { color: '#FFD600', fontSize: 16, fontWeight: 'bold', marginBottom: 12, marginTop: 16 },
+  card: { backgroundColor: '#161616', borderRadius: 12, padding: 12, marginBottom: 12, borderLeftWidth: 6, width: '100%', minHeight: 135, justifyContent: 'space-between' },
+  cardTitle: { color: '#FFD600', fontSize: 15, fontWeight: 'bold', lineHeight: 18 },
+  cardTime: { color: '#FFFFFF', fontSize: 13, marginTop: 4 },
+  badge: { paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4, alignSelf: 'flex-start', marginTop: 8 },
+  badgeText: { color: '#FFFFFF', fontSize: 10, fontWeight: 'bold' },
+  cardAuthor: { color: '#888', fontSize: 11, marginTop: 6 },
+  btnPressed: { opacity: 0.75 },
+  navigationDock: { flexDirection: 'row', backgroundColor: '#161616', height: 65, borderTopWidth: 1, borderTopColor: '#222', justifyContent: 'space-around', alignItems: 'center', paddingBottom: 4 },
+  dockItem: { alignItems: 'center', justifyContent: 'center', flex: 1, height: '100%' },
+  dockIcon: { fontSize: 20, color: '#888' },
+  dockLabel: { fontSize: 11, color: '#888', marginTop: 2 },
+  selectedColor: { color: '#FFD600' },
 });

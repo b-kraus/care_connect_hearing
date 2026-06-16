@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import { View, Text, Pressable, StyleSheet, SafeAreaView } from 'react-native';
 import { router } from 'expo-router';
 
-export default function ReadMessageScreen() {
+interface ReadMessageProps {
+  onBack?: () => void;
+}
+
+export default function ReadMessageScreen({ onBack }: ReadMessageProps) {
   const [isListening, setIsListening] = useState(false);
   const [transcribedText, setTranscribedText] = useState('');
   const [status, setStatus] = useState('Ready. Tap the microphone to start listening.');
@@ -18,10 +22,23 @@ export default function ReadMessageScreen() {
     }
   };
 
+  const handleBackPress = () => {
+    if (onBack) {
+      onBack(); // Safely switches the inline state tab to 'home'
+    } else {
+      // Fallback fallback: Check if router can actually pop safely, otherwise force push home layout
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.replace('/home'); 
+      }
+    }
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-        <Pressable onPress={() => router.back()}>
+        <Pressable onPress={handleBackPress}>
           <Text style={styles.backArrow}>←</Text>
         </Pressable>
         <Text style={styles.title}>Read Message</Text>
@@ -29,7 +46,7 @@ export default function ReadMessageScreen() {
 
       <View style={styles.container}>
         <View style={[styles.statusBox, isListening && styles.statusActive]}>
-          <Text style={styles.statusIcon}>{isListening ? '🎙️' : '🎙️'}</Text>
+          <Text style={styles.statusIcon}>🎙️</Text>
           <Text style={styles.statusText}>{status}</Text>
         </View>
 
@@ -72,7 +89,7 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', alignItems: 'center', padding: 16, paddingTop: 8 },
   backArrow: { color: '#FFD600', fontSize: 28, marginRight: 16 },
   title: { color: '#FFD600', fontSize: 24, fontWeight: 'bold' },
-  container: { flex: 1, padding: 24 },
+  container: { flex: 1, padding: 24, paddingTop: 0 },
   statusBox: { padding: 12, backgroundColor: '#161616', borderRadius: 8, borderWidth: 2, borderColor: '#333', flexDirection: 'row', alignItems: 'center' },
   statusActive: { borderColor: '#2E7D32' },
   statusIcon: { fontSize: 20, marginRight: 12 },
