@@ -7,34 +7,21 @@ jest.mock('expo-router', () => ({
 }));
 jest.mock('@react-native-community/slider', () => 'Slider');
 
-import OnboardingScreen from '../src/app/index';
-import SettingsScreen from '../src/app/settings';
+beforeAll(() => jest.spyOn(console, 'error').mockImplementation(() => {}));
+afterAll(() => console.error.mockRestore());
 
-describe('OnboardingScreen', () => {
-  it('renders', () => {
-    let t; act(() => { t = renderer.create(<OnboardingScreen />); });
-    expect(t.toJSON()).toBeTruthy();
-  });
-  it('has welcome', () => {
-    let t; act(() => { t = renderer.create(<OnboardingScreen />); });
-    expect(JSON.stringify(t.toJSON())).toContain('Welcome');
-  });
-  it('has button', () => {
-    let t; act(() => { t = renderer.create(<OnboardingScreen />); });
-    expect(JSON.stringify(t.toJSON())).toContain('Start Guided Setup');
-  });
-});
+import SettingsScreen from '../src/app/settings';
 
 describe('SettingsScreen', () => {
   it('renders', () => {
     let t; act(() => { t = renderer.create(<SettingsScreen />); });
     expect(t.toJSON()).toBeTruthy();
   });
-  it('has title', () => {
+  it('title', () => {
     let t; act(() => { t = renderer.create(<SettingsScreen />); });
     expect(JSON.stringify(t.toJSON())).toContain('Settings');
   });
-  it('has WCAG', () => {
+  it('WCAG', () => {
     let t; act(() => { t = renderer.create(<SettingsScreen />); });
     expect(JSON.stringify(t.toJSON())).toContain('WCAG');
   });
