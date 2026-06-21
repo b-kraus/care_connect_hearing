@@ -62,7 +62,7 @@ export default function ReadMessageScreen({ onBack }: ReadMessageProps) {
             isListening && styles.micButtonStop,
             pressed && styles.buttonPressed,
           ]}
-          onPress={toggleListening}
+          accessibilityLabel="Toggle speech to text listening" accessibilityRole="button" onPress={toggleListening}
         >
           <Text style={styles.micButtonText}>
             {isListening ? '⏹ STOP LISTENING' : '🎙️ START LISTENING'}

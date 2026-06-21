@@ -65,7 +65,7 @@ export default function RecordMessageScreen() {
             isRecording && styles.recordButtonStop,
             pressed && styles.buttonPressed,
           ]}
-          onPress={toggleRecording}
+          accessibilityLabel="Toggle voice recording" accessibilityRole="button" onPress={toggleRecording}
         >
           <Text style={styles.recordButtonText}>
             {isRecording ? '⏹ STOP RECORDING' : '🎙️ START RECORDING'}

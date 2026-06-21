@@ -35,7 +35,7 @@ export default function HomeScreen() {
                 <Text style={styles.headingText}>Good afternoon,{"\n"}Marcus</Text>
                 <Text style={styles.dateLabel}>Saturday, June 6</Text>
                 
-                <Pressable
+                <Pressable accessibilityLabel="Simulate high priority alert" accessibilityRole="button"
                   style={({ pressed }) => [styles.demoBtn, pressed && styles.btnPressed]}
                   onPress={() => {
                     triggerDemoAlert();
@@ -49,7 +49,7 @@ export default function HomeScreen() {
                 </Pressable>
               </View>
 
-              <Pressable 
+              <Pressable accessibilityLabel="Send emergency SOS alert" accessibilityRole="button" 
                 style={({ pressed }) => [styles.emergencyCircle, pressed && styles.btnPressed]} 
                 onPress={() => setShowEmergencyOverlay(true)}
               >
@@ -105,7 +105,7 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.viewViewport}>
       <View style={styles.topAppBar}>
         <Text style={styles.appTitle}>Care Connect Hearing</Text>
-        <Pressable onPress={() => setActiveTab('settings')} style={styles.settingsTapTarget}>
+        <Pressable accessibilityLabel="Open settings" accessibilityRole="button" onPress={() => setActiveTab('settings')} style={styles.settingsTapTarget}>
           <Text style={[styles.settingsIconText, activeTab === 'settings' && styles.selectedColor]}>⚙️</Text>
         </Pressable>
       </View>
@@ -125,19 +125,19 @@ export default function HomeScreen() {
       )}
 
       <View style={styles.navigationDock}>
-        <Pressable style={styles.dockItem} onPress={() => setActiveTab('home')}>
+        <Pressable accessibilityLabel="Home tab" accessibilityRole="tab" style={styles.dockItem} onPress={() => setActiveTab('home')}>
           <Text style={[styles.dockIcon, activeTab === 'home' && styles.selectedColor]}>🏠</Text>
           <Text style={[styles.dockLabel, activeTab === 'home' && styles.selectedColor]}>Home</Text>
         </Pressable>
-        <Pressable style={styles.dockItem} onPress={() => setActiveTab('messages')}>
+        <Pressable accessibilityLabel="Messages tab" accessibilityRole="tab" style={styles.dockItem} onPress={() => setActiveTab('messages')}>
           <Text style={[styles.dockIcon, activeTab === 'messages' && styles.selectedColor]}>💬</Text>
           <Text style={[styles.dockLabel, activeTab === 'messages' && styles.selectedColor]}>Messages</Text>
         </Pressable>
-        <Pressable style={styles.dockItem} onPress={() => setActiveTab('log')}>
+        <Pressable accessibilityLabel="Log tab" accessibilityRole="tab" style={styles.dockItem} onPress={() => setActiveTab('log')}>
           <Text style={[styles.dockIcon, activeTab === 'log' && styles.selectedColor]}>📋</Text>
           <Text style={[styles.dockLabel, activeTab === 'log' && styles.selectedColor]}>Log</Text>
         </Pressable>
-        <Pressable style={styles.dockItem} onPress={() => setActiveTab('settings')}>
+        <Pressable accessibilityLabel="Settings tab" accessibilityRole="tab" style={styles.dockItem} onPress={() => setActiveTab('settings')}>
           <Text style={[styles.dockIcon, activeTab === 'settings' && styles.selectedColor]}>⚙️</Text>
           <Text style={[styles.dockLabel, activeTab === 'settings' && styles.selectedColor]}>Settings</Text>
         </Pressable>
