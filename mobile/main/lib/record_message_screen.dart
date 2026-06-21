@@ -196,7 +196,7 @@ class _RecordMessageScreenState extends State<RecordMessageScreen> {
                 height: 64,
                 child: ElevatedButton.icon(
                   onPressed: _speechAvailable ? (_isListening ? _stopRecording : _startRecording) : null,
-                  icon: Icon(_isListening ? Icons.stop : Icons.mic, color: Colors.white, size: 28),
+                  icon: Icon(_isListening ? Icons.stop : Icons.mic, color: Colors.white, size: 28, semanticLabel: 'Toggle voice recording'),
                   label: Text(
                     _isListening ? 'STOP RECORDING' : 'START RECORDING',
                     style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 1.2),
@@ -227,7 +227,7 @@ class _RecordMessageScreenState extends State<RecordMessageScreen> {
                       flex: 2,
                       child: ElevatedButton.icon(
                         onPressed: _sendMessage,
-                        icon: const Icon(Icons.send, color: Colors.white, size: 20),
+                        icon: const Icon(Icons.send, color: Colors.white, size: 20, semanticLabel: 'Send message'),
                         label: const Text('SEND', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF2E7D32),

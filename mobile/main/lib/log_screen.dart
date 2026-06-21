@@ -146,7 +146,7 @@ class _LogScreenState extends State<LogScreen> {
         ),
         child: Row(
           children: const [
-            Icon(Icons.notifications_none, color: Color(0xFFFFD600), size: 20),
+            Icon(Icons.notifications_none, color: Color(0xFFFFD600), size: 20, semanticLabel: 'Alert notification'),
             SizedBox(width: 8),
             Expanded(
               child: Text(
@@ -210,7 +210,7 @@ class _LogScreenState extends State<LogScreen> {
           const CircleAvatar(
             backgroundColor: Color(0xFF1976D2),
             radius: 18,
-            child: Icon(Icons.person, color: Colors.white, size: 20),
+            child: Icon(Icons.person, color: Colors.white, size: 20, semanticLabel: 'User profile'),
           ),
           const SizedBox(width: 12),
           Expanded(
