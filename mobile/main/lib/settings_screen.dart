@@ -78,7 +78,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         appBar: AppBar(
           backgroundColor: const Color(0xFF000000),
           elevation: 0,
-          // Fixed: Disabled standard leading arrow logic and removed leading widget block
           automaticallyImplyLeading: false, 
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,6 +106,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Container(color: const Color(0xFF222222), height: 1),
           ),
         ),
+        // FIXED: The Scrollbar now directly wraps SingleChildScrollView for cohesive shared controller pairing
         body: Scrollbar(
           controller: _scrollController,
           thumbVisibility: true, 
@@ -153,7 +153,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const Text(
                   'Changes take effect after saving. Test each setting before saving.',
                   style: TextStyle(
-                    color: Color(0xFF888800),
+                    color: Color(0xFFFFD600), // FIXED: Higher contrast color shade
                     fontSize: 14,
                   ),
                 ),
@@ -185,7 +185,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 16),
           Row(
             children: [
-              const Text('Slow', style: TextStyle(color: Color(0xFF888800), fontSize: 14)),
+              const Text('Slow', style: TextStyle(color: Color(0xFFFFD600), fontSize: 14)), // FIXED
               Expanded(
                 child: Slider(
                   value: _flashSpeed,
@@ -195,13 +195,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onChanged: (val) => setState(() => _flashSpeed = val),
                 ),
               ),
-              const Text('Fast', style: TextStyle(color: Color(0xFF888800), fontSize: 14)),
+              const Text('Fast', style: TextStyle(color: Color(0xFFFFD600), fontSize: 14)), // FIXED
             ],
           ),
           const SizedBox(height: 16),
           Text(
             'Flash Speed, currently $currentLabel — $currentFreq',
-            style: const TextStyle(color: Color(0xFF888800), fontSize: 14, height: 1.4),
+            style: const TextStyle(color: Color(0xFFFFD600), fontSize: 14, height: 1.4), // FIXED
           ),
           const Spacer(),
           Row(
@@ -221,7 +221,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const Expanded(
                 child: Text(
                   'Max 3/sec — WCAG 2.3.1',
-                  style: TextStyle(color: Color(0xFF888800), fontSize: 12),
+                  style: TextStyle(color: Color(0xFFFFD600), fontSize: 12), // FIXED
                 ),
               ),
             ],
@@ -253,7 +253,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 16),
           Row(
             children: [
-              const Text('Gentle', style: TextStyle(color: Color(0xFF888800), fontSize: 14)),
+              const Text('Gentle', style: TextStyle(color: Color(0xFFFFD600), fontSize: 14)), // FIXED
               Expanded(
                 child: Slider(
                   value: _vibrationStrength,
@@ -263,13 +263,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onChanged: (val) => setState(() => _vibrationStrength = val),
                 ),
               ),
-              const Text('Strong', style: TextStyle(color: Color(0xFF888800), fontSize: 14)),
+              const Text('Strong', style: TextStyle(color: Color(0xFFFFD600), fontSize: 14)), // FIXED
             ],
           ),
           const SizedBox(height: 16),
           Text(
             'Vibration Strength, currently $currentLabel',
-            style: const TextStyle(color: Color(0xFF888800), fontSize: 14),
+            style: const TextStyle(color: Color(0xFFFFD600), fontSize: 14), // FIXED
           ),
           const Spacer(),
           Row(
@@ -288,7 +288,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SizedBox(width: 12),
               Text(
                 currentPulse,
-                style: const TextStyle(color: Color(0xFF888800), fontSize: 14),
+                style: const TextStyle(color: Color(0xFFFFD600), fontSize: 14), // FIXED
               ),
             ],
           ),
@@ -318,7 +318,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 16),
           Row(
             children: [
-              const Text('100%', style: TextStyle(color: Color(0xFF888800), fontSize: 14)),
+              const Text('100%', style: TextStyle(color: Color(0xFFFFD600), fontSize: 14)), // FIXED
               Expanded(
                 child: Slider(
                   value: _textSize,
@@ -327,13 +327,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onChanged: (val) => setState(() => _textSize = val),
                 ),
               ),
-              const Text('200%', style: TextStyle(color: Color(0xFF888800), fontSize: 14)),
+              const Text('200%', style: TextStyle(color: Color(0xFFFFD600), fontSize: 14)), // FIXED
             ],
           ),
           const SizedBox(height: 16),
           Text(
             'Text Size, currently $sizePercentage%',
-            style: const TextStyle(color: Color(0xFF888800), fontSize: 14),
+            style: const TextStyle(color: Color(0xFFFFD600), fontSize: 14), // FIXED
           ),
           const SizedBox(height: 16),
           Row(
@@ -371,7 +371,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 Text(
                   _highContrast ? 'On' : 'Off',
-                  style: const TextStyle(color: Color(0xFF888800), fontSize: 14),
+                  style: const TextStyle(color: Color(0xFFFFD600), fontSize: 14), // FIXED
                 ),
                 Switch(
                   value: _highContrast,
@@ -405,13 +405,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ],
       );
 
-  Widget _buildTestButton() => ElevatedButton(
-        onPressed: () {},
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFFFFD600),
-          minimumSize: const Size(double.infinity, 44),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+  Widget _buildTestButton() => SizedBox(
+        height: 48,
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFFFFD600),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+          child: const Text('Test', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold)),
         ),
-        child: const Text('Test', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold)),
       );
 }

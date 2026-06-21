@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import 'state/alert_provider.dart';
 import 'active_alert_screen.dart';
 import 'emergency_alert_screen.dart';
-import 'read_message_screen.dart';   // <--- Path to your messages design
-import 'log_screen.dart';        // <--- Path to your log history design
-import 'settings_screen.dart';   // <--- Path to your settings design
+import 'read_message_screen.dart';   
+import 'log_screen.dart';        
+import 'settings_screen.dart';   
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,7 +21,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF000000),
-      // Keeping the navigation bar safely locked at the bottom
       body: SafeArea(
         child: _buildDynamicBodyContent(),
       ),
@@ -33,17 +32,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildDynamicBodyContent() {
     switch (_currentNavIndex) {
       case 1:
-        // Returns your exact original messages design completely intact
-        return   const ReadMessageScreen(); 
+        return const ReadMessageScreen(); 
       case 2:
-        // Returns your exact original log history design completely intact
         return const LogScreen();      
       case 3:
-        // Returns your exact original settings design completely intact
         return const SettingsScreen(); 
       case 0:
       default:
-        // Returns the main home dashboard tab page
         return _buildMainDashboardPage();
     }
   }
@@ -100,17 +95,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          final tempId = DateTime.now().millisecondsSinceEpoch.toString();
-                          alertProvider.addAlert(tempId, 'Take blue pill');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF0D47A1),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                      // FIXED: Wrapped with explicit height to satisfy androidTapTargetGuideline
+                      SizedBox(
+                        height: 48,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            final tempId = DateTime.now().millisecondsSinceEpoch.toString();
+                            alertProvider.addAlert(tempId, 'Take blue pill');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF0D47A1),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                          ),
+                          child: const Text('Demo Alert Overlay'),
                         ),
-                        child: const Text('Demo Alert Overlay'),
                       ),
                     ],
                   ),
@@ -333,7 +332,14 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(color: badgeColor, borderRadius: BorderRadius.circular(4)),
-                child: Text(badgeText, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+                child: Text(
+                  badgeText, 
+                  style: const TextStyle(
+                    color: Colors.black, 
+                    fontSize: 12, 
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
               ),
               const SizedBox(width: 6),
               Text('Set by Sarah', style: TextStyle(color: Colors.grey.shade500, fontSize: 12)),
@@ -345,13 +351,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildDevTimeoutBar(AlertProvider provider) {
+    const highContrastRed = Color(0xFFFF5252); 
+
     return Row(
       children: [
         Expanded(
           child: OutlinedButton(
             style: OutlinedButton.styleFrom(
-              foregroundColor: const Color(0xFFC62828),
-              side: const BorderSide(color: Color(0xFFC62828)),
+              foregroundColor: highContrastRed, 
+              side: const BorderSide(color: highContrastRed), 
             ),
             onPressed: () {
               final activeNowAlerts = provider.activeHomeAlerts
