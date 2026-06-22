@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, Pressable, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context'; // Updated
 import { router } from 'expo-router';
 
 interface ReadMessageProps {
@@ -24,9 +25,8 @@ export default function ReadMessageScreen({ onBack }: ReadMessageProps) {
 
   const handleBackPress = () => {
     if (onBack) {
-      onBack(); // Safely switches the inline state tab to 'home'
+      onBack();
     } else {
-      // Fallback fallback: Check if router can actually pop safely, otherwise force push home layout
       if (router.canGoBack()) {
         router.back();
       } else {

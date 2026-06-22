@@ -3,20 +3,17 @@ import { View, Text, StyleSheet, Pressable, ScrollView, Switch } from 'react-nat
 import Slider from '@react-native-community/slider';
 
 export default function SettingsScreen() {
-  // 1. Manage real-time slider states
   const [flashSpeed, setFlashSpeed] = useState(1.8);
   const [vibrationStrength, setVibrationStrength] = useState(225);
   const [textSize, setTextSize] = useState(100);
   const [isHighContrast, setIsHighContrast] = useState(true);
 
-  // 2. Helper function to calculate Flash Speed dynamic badge text
   const getFlashBadgeText = (speed: number) => {
     if (speed < 1.6) return 'SLOW';
     if (speed <= 2.4) return 'MEDIUM';
     return 'FAST';
   };
 
-  // 3. Helper function to calculate Vibration dynamic badge text
   const getVibrationBadgeText = (strength: number) => {
     if (strength < 200) return 'GENTLE';
     if (strength <= 350) return 'MEDIUM';
@@ -47,11 +44,11 @@ export default function SettingsScreen() {
           <View style={styles.sliderRow}>
             <Text style={styles.sliderBoundaryText}>Slow</Text>
             <Slider
+              testID="slider-flash-speed" // ADDED
               style={styles.slider}
               minimumValue={1.0}
               maximumValue={3.0}
               value={flashSpeed}
-              // Updates dynamically on drag
               onValueChange={(val) => setFlashSpeed(parseFloat(val.toFixed(1)))}
               minimumTrackTintColor="#FFD600"
               maximumTrackTintColor="#333"
@@ -60,13 +57,11 @@ export default function SettingsScreen() {
             <Text style={styles.sliderBoundaryText}>Fast</Text>
           </View>
           
-          {/* Dynamic Description Text */}
           <Text style={styles.statusDescription}>
             Flash Speed, currently {getFlashBadgeText(flashSpeed).charAt(0) + getFlashBadgeText(flashSpeed).slice(1).toLowerCase()} — {flashSpeed} flashes per second
           </Text>
 
           <View style={styles.badgeRow}>
-            {/* Dynamic Badge Label */}
             <View style={styles.yellowBadge}>
               <Text style={styles.badgeText}>{getFlashBadgeText(flashSpeed)}</Text>
             </View>
@@ -87,11 +82,11 @@ export default function SettingsScreen() {
           <View style={styles.sliderRow}>
             <Text style={styles.sliderBoundaryText}>Gentle</Text>
             <Slider
+              testID="slider-vibration-strength" // ADDED
               style={styles.slider}
               minimumValue={100}
               maximumValue={500}
               value={vibrationStrength}
-              // Updates dynamically on drag
               onValueChange={(val) => setVibrationStrength(Math.round(val))}
               minimumTrackTintColor="#FFD600"
               maximumTrackTintColor="#333"
@@ -100,13 +95,11 @@ export default function SettingsScreen() {
             <Text style={styles.sliderBoundaryText}>Strong</Text>
           </View>
           
-          {/* Dynamic Description Text */}
           <Text style={styles.statusDescription}>
             Vibration Strength, currently {getVibrationBadgeText(vibrationStrength).charAt(0) + getVibrationBadgeText(vibrationStrength).slice(1).toLowerCase()}
           </Text>
 
           <View style={styles.badgeRow}>
-            {/* Dynamic Badge Label */}
             <View style={styles.yellowBadge}>
               <Text style={styles.badgeText}>{getVibrationBadgeText(vibrationStrength)}</Text>
             </View>
@@ -127,11 +120,11 @@ export default function SettingsScreen() {
           <View style={styles.sliderRow}>
             <Text style={styles.sliderBoundaryText}>100%</Text>
             <Slider
+              testID="slider-text-size" // ADDED
               style={styles.slider}
               minimumValue={100}
               maximumValue={200}
               value={textSize}
-              // Updates dynamically on drag
               onValueChange={(val) => setTextSize(Math.round(val))}
               minimumTrackTintColor="#FFD600"
               maximumTrackTintColor="#333"
@@ -140,13 +133,11 @@ export default function SettingsScreen() {
             <Text style={styles.sliderBoundaryText}>200%</Text>
           </View>
           
-          {/* Dynamic Description Text */}
           <Text style={styles.statusDescription}>
             Text Size, currently {textSize}%
           </Text>
 
           <View style={styles.previewBadgeRow}>
-            {/* Dynamic Badge Percentage */}
             <View style={styles.yellowBadge}><Text style={styles.badgeText}>{textSize}%</Text></View>
             <Text style={[styles.badgeLabel, { fontSize: 13 * (textSize / 100) }]} numberOfLines={1}>
               Preview text
@@ -158,6 +149,7 @@ export default function SettingsScreen() {
             <View style={styles.toggleContainer}>
               <Text style={styles.toggleStateLabel}>{isHighContrast ? "On" : "Off"}</Text>
               <Switch
+                testID="setting-high-contrast" // ADDED
                 value={isHighContrast}
                 onValueChange={setIsHighContrast}
                 trackColor={{ true: '#FFD600', false: '#333' }}

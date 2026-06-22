@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, Pressable, StyleSheet, SafeAreaView, TextInput, Alert } from 'react-native';
+import { View, Text, Pressable, StyleSheet, TextInput, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context'; // Updated
 import { router } from 'expo-router';
 
 export default function RecordMessageScreen() {

@@ -37,6 +37,7 @@ export default function LogScreen() {
         {(['ALL', 'CONFIRMED', 'MISSED'] as LogFilters[]).map((filterType) => (
           <Pressable
             key={filterType}
+            testID={`chip-${filterType.toLowerCase()}`}
             onPress={() => setActiveFilter(filterType)}
             style={[styles.filterChip, activeFilter === filterType && styles.selectedChipBg]}
           >
@@ -48,14 +49,20 @@ export default function LogScreen() {
       </View>
 
       {Object.keys(structuredTimelineGroups).length === 0 ? (
-        <Text style={styles.emptyLogsNotification}>No history logs found in this channel.</Text>
+        <Text testID="empty-log-message" style={styles.emptyLogsNotification}>
+          No history logs found in this channel.
+        </Text>
       ) : (
         Object.entries(structuredTimelineGroups).map(([dateTimelineTitle, chronologicalItems]) => (
           <View key={dateTimelineTitle} style={styles.timelineBlock}>
             <Text style={styles.timelineHeaderLabel}>{dateTimelineTitle}</Text>
             <View style={styles.twoColumnFlexGrid}>
               {chronologicalItems.map((item) => (
-                <View key={item.id} style={[styles.gridCard, { borderLeftColor: fetchStatusColorSchema(item.status) }]}>
+                <View 
+                  key={item.id} 
+                  testID={`log-card-${item.status.toLowerCase()}`}
+                  style={[styles.gridCard, { borderLeftColor: fetchStatusColorSchema(item.status) }]}
+                >
                   <View style={styles.cardUpperBody}>
                     <Text style={styles.cardHeaderTitle} numberOfLines={2}>{item.title}</Text>
                     <Text style={styles.cardSubTime}>{item.time}</Text>
