@@ -1,0 +1,13 @@
+appId: host.exp.Exponent
+---
+- launchApp
+- tapOn: "care_connect_hearing"
+- extendedWaitUntil:
+    visible: "Start Guided Setup"
+    timeout: 15000
+- tapOn: "Start Guided Setup"
+- waitForAnimationToEnd
+- tapOn:
+    id: "demo-alert-btn"
+- waitForAnimationToEnd
+- takeScreenshot: "alert_screen"

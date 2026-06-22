@@ -35,7 +35,7 @@ export default function HomeScreen() {
                 <Text style={styles.headingText}>Good afternoon,{"\n"}Marcus</Text>
                 <Text style={styles.dateLabel}>Saturday, June 6</Text>
                 
-                <Pressable accessibilityLabel="Simulate high priority alert" accessibilityRole="button"
+                <Pressable accessibilityLabel="Simulate high priority alert" testID="demo-alert-btn" accessibilityRole="button"
                   style={({ pressed }) => [styles.demoBtn, pressed && styles.btnPressed]}
                   onPress={() => {
                     triggerDemoAlert();

@@ -1,0 +1,6 @@
+appId: host.exp.Exponent
+---
+- launchApp
+- tapOn: "Start Guided Setup"
+- tapOn: "Settings"
+- assertVisible: "Flash"
