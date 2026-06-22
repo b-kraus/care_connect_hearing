@@ -83,7 +83,9 @@ class _ReadMessageScreenState extends State<ReadMessageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context) => const RecordMessageScreen())); },
+        onPressed: () { 
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const RecordMessageScreen())); 
+        },
         backgroundColor: const Color(0xFF1565C0),
         icon: const Icon(Icons.edit, color: Colors.white),
         label: const Text('New Message', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
@@ -104,7 +106,7 @@ class _ReadMessageScreenState extends State<ReadMessageScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.only(left: 24.0, right: 24.0, top: 24.0, bottom: 96.0), // Added bottom padding to clear the FAB completely
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -145,7 +147,7 @@ class _ReadMessageScreenState extends State<ReadMessageScreen> {
               ),
               const SizedBox(height: 24),
 
-              // Transcribed text display - large for readability
+              // Transcribed text display
               Expanded(
                 child: Container(
                   width: double.infinity,
@@ -177,8 +179,8 @@ class _ReadMessageScreenState extends State<ReadMessageScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Confidence indicator (when text exists)
-              if (_transcribedText.isNotEmpty && _confidence > 0)
+              // Confidence indicator
+              if (_transcribedText.isNotEmpty && _confidence > 0) ...[
                 Text(
                   'Confidence: ${(_confidence * 100).toStringAsFixed(0)}%',
                   style: const TextStyle(
@@ -186,7 +188,8 @@ class _ReadMessageScreenState extends State<ReadMessageScreen> {
                     fontSize: 12,
                   ),
                 ),
-              const SizedBox(height: 16),
+                const SizedBox(height: 16),
+              ],
 
               // Big mic button
               SizedBox(
@@ -220,18 +223,21 @@ class _ReadMessageScreenState extends State<ReadMessageScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
-
-              // Helper text
-              const Text(
-                'Speech-to-text uses your device built-in engine (WCAG-compliant local transcription).',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 12,
-                ),
-              ),
             ],
+          ),
+        ),
+      ),
+      // FIXED: Moved text out of the Body layout stack entirely to prevent collisions with the FAB layer
+      bottomNavigationBar: const SafeArea(
+        child: Padding(
+          padding: EdgeInsets.only(left: 24.0, right: 24.0, bottom: 16.0),
+          child: Text(
+            'Speech-to-text uses your device built-in engine (WCAG-compliant local transcription).',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Color(0xFFFFD600),
+              fontSize: 12,
+            ),
           ),
         ),
       ),

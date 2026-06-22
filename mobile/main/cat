@@ -1,0 +1,150 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
+import 'package:care_connect_hearing/home_screen.dart';
+import 'package:care_connect_hearing/log_screen.dart';
+import 'package:care_connect_hearing/state/alert_provider.dart';
+
+Widget wrapWithProvider(Widget child) {
+  return ChangeNotifierProvider(
+    create: (_) => AlertProvider(),
+    child: MaterialApp(home: child),
+  );
+}
+
+void main() {
+  setUp(() {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    const channel = MethodChannel('plugin.csdcorp.com/speech_to_text');
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
+      if (methodCall.method == 'initialize') return false;
+      if (methodCall.method == 'has_permission') return true;
+      if (methodCall.method == 'listen') return null;
+      if (methodCall.method == 'stop') return null;
+      if (methodCall.method == 'cancel') return null;
+      return null;
+    });
+  });
+
+  group('HomeScreen', () {
+    testWidgets('renders app title', (tester) async {
+      await tester.pumpWidget(wrapWithProvider(const HomeScreen()));
+      await tester.pumpAndSettle();
+      expect(find.text('Care Connect Hearing'), findsWidgets);
+    });
+
+    testWidgets('renders greeting text', (tester) async {
+      await tester.pumpWidget(wrapWithProvider(const HomeScreen()));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Good afternoon'), findsOneWidget);
+    });
+
+    testWidgets('renders demo alert button', (tester) async {
+      await tester.pumpWidget(wrapWithProvider(const HomeScreen()));
+      await tester.pumpAndSettle();
+      expect(find.text('Demo Alert Overlay'), findsOneWidget);
+    });
+
+    testWidgets('renders emergency circle', (tester) async {
+      await tester.pumpWidget(wrapWithProvider(const HomeScreen()));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('EMERGENCY'), findsOneWidget);
+    });
+
+    testWidgets('renders bottom navigation', (tester) async {
+      await tester.pumpWidget(wrapWithProvider(const HomeScreen()));
+      await tester.pumpAndSettle();
+      expect(find.text('Home'), findsOneWidget);
+      expect(find.text('Messages'), findsOneWidget);
+      expect(find.text('Log'), findsOneWidget);
+      expect(find.text('Settings'), findsOneWidget);
+    });
+
+    testWidgets('renders dashboard cards', (tester) async {
+      await tester.pumpWidget(wrapWithProvider(const HomeScreen()));
+      await tester.pumpAndSettle();
+      expect(find.text('Take blue pill'), findsWidgets);
+    });
+
+    testWidgets('renders settings icon', (tester) async {
+      await tester.pumpWidget(wrapWithProvider(const HomeScreen()));
+      await tester.pumpAndSettle();
+      expect(find.byIcon(Icons.settings), findsWidgets);
+    });
+
+    testWidgets('can switch to Log tab', (tester) async {
+      await tester.pumpWidget(wrapWithProvider(const HomeScreen()));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Log'));
+      await tester.pumpAndSettle();
+      expect(find.text('Alert History'), findsOneWidget);
+    });
+  });
+
+  group('LogScreen', () {
+    testWidgets('renders alert history title', (tester) async {
+      await tester.pumpWidget(wrapWithProvider(const LogScreen()));
+      await tester.pumpAndSettle();
+      expect(find.text('Alert History'), findsOneWidget);
+    });
+
+    testWidgets('renders filter chips', (tester) async {
+      await tester.pumpWidget(wrapWithProvider(const LogScreen()));
+      await tester.pumpAndSettle();
+      expect(find.text('All'), findsOneWidget);
+      expect(find.text('Confirmed'), findsOneWidget);
+      expect(find.text('Missed'), findsOneWidget);
+    });
+
+    testWidgets('renders my history toggle', (tester) async {
+      await tester.pumpWidget(wrapWithProvider(const LogScreen()));
+      await tester.pumpAndSettle();
+      expect(find.text('My History'), findsOneWidget);
+      expect(find.text('Mine'), findsOneWidget);
+      expect(find.text('Family'), findsOneWidget);
+    });
+
+    testWidgets('renders alert log items', (tester) async {
+      await tester.pumpWidget(wrapWithProvider(const LogScreen()));
+      await tester.pumpAndSettle();
+      expect(find.text('Take blue pill'), findsWidgets);
+      expect(find.text('Morning walk'), findsOneWidget);
+    });
+
+    testWidgets('renders latest activity banner', (tester) async {
+      await tester.pumpWidget(wrapWithProvider(const LogScreen()));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('live events'), findsOneWidget);
+    });
+
+    testWidgets('filter chips work - confirmed', (tester) async {
+      await tester.pumpWidget(wrapWithProvider(const LogScreen()));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Confirmed'));
+      await tester.pumpAndSettle();
+      expect(find.text('Morning walk'), findsNothing);
+    });
+
+    testWidgets('filter chips work - missed', (tester) async {
+      await tester.pumpWidget(wrapWithProvider(const LogScreen()));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Missed'));
+      await tester.pumpAndSettle();
+      expect(find.text('Morning walk'), findsOneWidget);
+    });
+
+    testWidgets('renders section headers', (tester) async {
+      await tester.pumpWidget(wrapWithProvider(const LogScreen()));
+      await tester.pumpAndSettle();
+      expect(find.text('TODAY'), findsOneWidget);
+    });
+
+    testWidgets('family toggle renders switch', (tester) async {
+      await tester.pumpWidget(wrapWithProvider(const LogScreen()));
+      await tester.pumpAndSettle();
+      expect(find.byType(Switch), findsOneWidget);
+    });
+  });
+}

@@ -63,7 +63,6 @@ class _LogScreenState extends State<LogScreen> {
         ),
         body: Consumer<AlertProvider>(
           builder: (context, alertProvider, child) {
-            // 1. Filter the logs dynamically based on the string prefix
             final allLogs = alertProvider.logs;
             
             final filteredLogs = allLogs.where((log) {
@@ -72,7 +71,6 @@ class _LogScreenState extends State<LogScreen> {
               } else if (_activeFilter == 'Missed') {
                 return log.startsWith('Missed:');
               }
-              // 'All' displays both Confirmed and Missed entries, ignoring raw system entries
               return log.startsWith('Confirmed:') || log.startsWith('Missed:');
             }).toList();
 
@@ -82,29 +80,26 @@ class _LogScreenState extends State<LogScreen> {
                 _buildToggleHeader(),
                 _buildFilterChips(),
 
-                // Scrollable Dynamic Canvas List
+                // Dynamic Canvas List
                 Expanded(
-                  child: Scrollbar(
-                    controller: _logScrollController,
-                    thumbVisibility: true,
-                    child: filteredLogs.isEmpty
-                        ? Center(
-                            child: Text(
-                              'No matching $_activeFilter alerts found',
-                              style: const TextStyle(color: Colors.grey, fontSize: 16),
-                            ),
-                          )
-                        : ListView.builder(
+                  child: filteredLogs.isEmpty
+                      ? Center(
+                          child: Text(
+                            'No matching $_activeFilter alerts found',
+                            style: const TextStyle(color: Colors.grey, fontSize: 16),
+                          ),
+                        )
+                      : Scrollbar(
+                          // FIXED: Moved scrollbar wrapper here so it only builds when the list exists
+                          controller: _logScrollController,
+                          thumbVisibility: true,
+                          child: ListView.builder(
                             controller: _logScrollController,
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
                             itemCount: filteredLogs.length,
                             itemBuilder: (context, index) {
                               final rawLog = filteredLogs[index];
-                              
-                              // Check the real status of this specific app-generated log
                               final bool isConfirmed = rawLog.startsWith('Confirmed:');
-                              
-                              // Strip off the prefix indicator tags cleanly for the text rendering title
                               final displayTitle = rawLog
                                   .replaceAll('Confirmed: ', '')
                                   .replaceAll('Missed: ', '');
@@ -118,13 +113,13 @@ class _LogScreenState extends State<LogScreen> {
                                   _buildLogTile(
                                     title: displayTitle,
                                     time: 'Just Now', 
-                                    isConfirmed: isConfirmed, // Dynamic color and icons match status
+                                    isConfirmed: isConfirmed,
                                   ),
                                 ],
                               );
                             },
                           ),
-                  ),
+                        ),
                 ),
               ],
             );

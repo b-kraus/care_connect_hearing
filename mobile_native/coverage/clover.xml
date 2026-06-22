@@ -1,65 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1781641249547" clover="3.2.0">
-  <project timestamp="1781641249547" name="All files">
-    <metrics statements="68" coveredstatements="45" conditionals="57" coveredconditionals="34" methods="24" coveredmethods="13" elements="149" coveredelements="92" complexity="0" loc="68" ncloc="68" packages="1" files="4" classes="4"/>
-    <file name="index.tsx" path="/Users/cami/care_connect_hearing/mobile_native/src/app/index.tsx">
-      <metrics statements="9" coveredstatements="6" conditionals="6" coveredconditionals="3" methods="5" coveredmethods="3"/>
-      <line num="6" count="3" type="stmt"/>
-      <line num="9" count="3" type="cond" truecount="1" falsecount="1"/>
-      <line num="10" count="0" type="stmt"/>
-      <line num="18" count="3" type="stmt"/>
-      <line num="39" count="3" type="stmt"/>
-      <line num="43" count="0" type="stmt"/>
-      <line num="49" count="3" type="stmt"/>
-      <line num="53" count="0" type="stmt"/>
-      <line num="62" count="1" type="stmt"/>
-    </file>
+<coverage generated="1782064045061" clover="3.2.0">
+  <project timestamp="1782064045061" name="All files">
+    <metrics statements="59" coveredstatements="48" conditionals="51" coveredconditionals="36" methods="19" coveredmethods="13" elements="129" coveredelements="97" complexity="0" loc="59" ncloc="59" packages="1" files="3" classes="3"/>
     <file name="read-message.tsx" path="/Users/cami/care_connect_hearing/mobile_native/src/app/read-message.tsx">
-      <metrics statements="21" coveredstatements="13" conditionals="20" coveredconditionals="12" methods="6" coveredmethods="4"/>
-      <line num="10" count="5" type="stmt"/>
-      <line num="11" count="5" type="stmt"/>
-      <line num="12" count="5" type="stmt"/>
-      <line num="14" count="5" type="stmt"/>
-      <line num="15" count="1" type="cond" truecount="1" falsecount="1"/>
-      <line num="16" count="0" type="stmt"/>
-      <line num="17" count="0" type="stmt"/>
+      <metrics statements="21" coveredstatements="19" conditionals="20" coveredconditionals="15" methods="6" coveredmethods="6"/>
+      <line num="10" count="7" type="stmt"/>
+      <line num="11" count="7" type="stmt"/>
+      <line num="12" count="7" type="stmt"/>
+      <line num="14" count="7" type="stmt"/>
+      <line num="15" count="2" type="cond" truecount="2" falsecount="0"/>
+      <line num="16" count="1" type="stmt"/>
+      <line num="17" count="1" type="stmt"/>
       <line num="19" count="1" type="stmt"/>
       <line num="20" count="1" type="stmt"/>
       <line num="21" count="1" type="stmt"/>
-      <line num="25" count="5" type="stmt"/>
-      <line num="26" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="25" count="7" type="stmt"/>
+      <line num="26" count="1" type="cond" truecount="1" falsecount="1"/>
       <line num="27" count="0" type="stmt"/>
-      <line num="30" count="0" type="cond" truecount="0" falsecount="2"/>
-      <line num="31" count="0" type="stmt"/>
+      <line num="30" count="1" type="cond" truecount="1" falsecount="1"/>
+      <line num="31" count="1" type="stmt"/>
       <line num="33" count="0" type="stmt"/>
-      <line num="38" count="5" type="stmt"/>
-      <line num="60" count="5" type="stmt"/>
-      <line num="73" count="5" type="cond" truecount="1" falsecount="1"/>
-      <line num="74" count="0" type="stmt"/>
+      <line num="38" count="7" type="stmt"/>
+      <line num="60" count="7" type="stmt"/>
+      <line num="73" count="7" type="cond" truecount="1" falsecount="1"/>
+      <line num="74" count="1" type="stmt"/>
       <line num="87" count="1" type="stmt"/>
     </file>
     <file name="record-message.tsx" path="/Users/cami/care_connect_hearing/mobile_native/src/app/record-message.tsx">
-      <metrics statements="21" coveredstatements="14" conditionals="21" coveredconditionals="14" methods="7" coveredmethods="3"/>
-      <line num="6" count="5" type="stmt"/>
-      <line num="7" count="5" type="stmt"/>
-      <line num="8" count="5" type="stmt"/>
-      <line num="9" count="5" type="stmt"/>
-      <line num="11" count="5" type="stmt"/>
-      <line num="12" count="1" type="cond" truecount="1" falsecount="1"/>
-      <line num="13" count="0" type="stmt"/>
-      <line num="14" count="0" type="cond" truecount="0" falsecount="2"/>
+      <metrics statements="21" coveredstatements="17" conditionals="21" coveredconditionals="16" methods="7" coveredmethods="4"/>
+      <line num="6" count="6" type="stmt"/>
+      <line num="7" count="6" type="stmt"/>
+      <line num="8" count="6" type="stmt"/>
+      <line num="9" count="6" type="stmt"/>
+      <line num="11" count="6" type="stmt"/>
+      <line num="12" count="2" type="cond" truecount="2" falsecount="0"/>
+      <line num="13" count="1" type="stmt"/>
+      <line num="14" count="1" type="cond" truecount="1" falsecount="1"/>
       <line num="16" count="1" type="stmt"/>
       <line num="17" count="1" type="stmt"/>
       <line num="18" count="1" type="stmt"/>
-      <line num="22" count="5" type="stmt"/>
+      <line num="22" count="6" type="stmt"/>
       <line num="23" count="0" type="stmt"/>
       <line num="24" count="0" type="stmt"/>
-      <line num="28" count="5" type="stmt"/>
+      <line num="28" count="6" type="stmt"/>
       <line num="29" count="0" type="stmt"/>
       <line num="30" count="0" type="stmt"/>
-      <line num="33" count="5" type="stmt"/>
-      <line num="36" count="0" type="stmt"/>
-      <line num="63" count="5" type="stmt"/>
+      <line num="33" count="6" type="stmt"/>
+      <line num="36" count="1" type="stmt"/>
+      <line num="63" count="6" type="stmt"/>
       <line num="90" count="1" type="stmt"/>
     </file>
     <file name="settings.tsx" path="/Users/cami/care_connect_hearing/mobile_native/src/app/settings.tsx">
