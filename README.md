@@ -8,43 +8,7 @@
 ## Link To Charter: https://umuc365-my.sharepoint.com/:w:/r/personal/cmekonnen_student_umgc_edu/_layouts/15/Doc.aspx?sourcedoc=%7B0BEA988E-E81B-49BE-9FA1-F89B24F98A9B%7D&file=Team%20Charter.docx&action=default&mobileredirect=true&DefaultItemOpen=1
 ## Setup Instructions:
 
-## Repository Structure
-
-```text
-care_connect_hearing/
-├── desktop/
-├── mobile/
-│   ├── main/          # Flutter application
-│   └── test/
-├── mobile_native/     # React Native / Expo application
-├── web/
-└── README.md
-```
-
-## Dependency Requirements
-
-### General
-
-* Git
-* Node.js
-* npm
-* Android Studio
-* Android SDK
-* Visual Studio Code
-
-### Flutter Application
-
-* Flutter SDK
-* Dart SDK
-
-### React Native Application
-
-* Expo CLI (installed through project dependencies)
-* React Native dependencies defined in package.json
-
-## Setup Instructions
-
-Clone the repository:
+### Clone the repository:
 
 ```bash
 git clone <https://github.com/b-kraus/care_connect_hearing>
@@ -162,4 +126,38 @@ Results:
 * Screen content was readable using TalkBack.
 
 Future testing includes iOS VoiceOver validation and end-to-end accessibility testing.
+
+## Repository Structure
+
+```text
+care_connect_hearing/
+├── desktop/
+├── mobile/
+│   ├── main/          # Flutter application
+│   └── test/
+├── mobile_native/     # React Native / Expo application
+├── web/
+└── README.md
+```
+
+## Dependency Requirements
+
+### General
+
+* Git
+* Node.js
+* npm
+* Android Studio
+* Android SDK
+* Visual Studio Code
+
+### Flutter Application
+
+* Flutter SDK
+* Dart SDK
+
+### React Native Application
+
+* Expo CLI (installed through project dependencies)
+* React Native dependencies defined in package.json
 
