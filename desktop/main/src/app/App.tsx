@@ -3,6 +3,7 @@ import { Bell, Zap, Eye, Volume2, Settings, CheckCircle2, Monitor, ArrowRight, H
 import Home from "./screens/Home.tsx";
 import Logs from "./screens/Logs.tsx";
 import Emergency from "./screens/Emergency.tsx";
+import SettingsScreen from "./screens/Settings.tsx";
 const STEPS = ["Welcome", "Alert Style", "Display", "Complete", "Home"] as const;
 
 const features = [
@@ -491,8 +492,17 @@ export default function App() {
     );
   }
 
-  // 4. Fallback default onboarding setup interface view return block
-  return (
+if (currentView === "settings") {
+  return <SettingsScreen onNavigate={(screen) => setCurrentView(screen)} />;
+}
+
+if (step === 4) {
+  // If they somehow refreshed here, ensure they are set to home view
+  setCurrentView("home");
+  return <Home onNavigate={(screen) => setCurrentView(screen as "home" | "logs")} />;
+}
+
+return (
     <>
       {/* Skip link — WCAG 2.4.1 */}
       <a

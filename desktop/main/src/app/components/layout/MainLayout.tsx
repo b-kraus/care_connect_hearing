@@ -3,6 +3,8 @@ import Sidebar from "./Sidebar";
 import StatusBar from "./StatusBar";
 import TopMenu from "./TopMenu";
 
+export type ScreenName = string | "settings" | "alerts" | "messages" | "recording" | "emergency";
+
 interface MainLayoutProps {
   children: ReactNode;
   currentView?: "home" | "logs" | string;
