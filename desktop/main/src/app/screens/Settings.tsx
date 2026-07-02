@@ -1,8 +1,8 @@
 import MainLayout from "../components/layout/MainLayout";
 
-export default function Settings() {
+export default function Settings({ onNavigate }: { onNavigate?: (s: string) => void }) {
   return (
-    <MainLayout>
+    <MainLayout currentView="settings" onNavigate={onNavigate}>
       <h1 className="text-4xl font-bold mb-6">
         <span className="text-[#FFD600]">Settings</span>
       </h1>

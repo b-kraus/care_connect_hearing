@@ -13,7 +13,7 @@ const focusRing =
 
 interface SidebarProps {
   currentView?: "home" | "logs" | string;
-  onNavigate?: (screenName: "home" | "logs") => void;
+  onNavigate?: (screenName: string) => void;
 }
 
 export default function Sidebar({ currentView = "home", onNavigate }: SidebarProps) {
@@ -59,17 +59,17 @@ export default function Sidebar({ currentView = "home", onNavigate }: SidebarPro
           Alert Logs
         </button>
 
-        <button className={`flex items-center gap-4 px-5 py-4 rounded-xl hover:bg-[#FFD600]/10 text-left ${focusRing}`}>
+        <button onClick={() => onNavigate && onNavigate("messages")} className={`flex items-center gap-4 px-5 py-4 rounded-xl hover:bg-[#FFD600]/10 text-left ${focusRing}`}>
           <MessageCircle className="w-6 h-6 text-[#FFD600]" aria-hidden />
           Messages
         </button>
 
-        <button className={`flex items-center gap-4 px-5 py-4 rounded-xl hover:bg-[#FFD600]/10 text-left ${focusRing}`}>
+        <button onClick={() => onNavigate && onNavigate("recording")} className={`flex items-center gap-4 px-5 py-4 rounded-xl hover:bg-[#FFD600]/10 text-left ${focusRing}`}>
           <Mic className="w-6 h-6 text-[#FFD600]" aria-hidden />
           Hearing Recording
         </button>
 
-        <button className={`flex items-center gap-4 px-5 py-4 rounded-xl hover:bg-[#FFD600]/10 text-left ${focusRing}`}>
+        <button onClick={() => onNavigate && onNavigate("settings")} className={`flex items-center gap-4 px-5 py-4 rounded-xl hover:bg-[#FFD600]/10 text-left ${focusRing}`}>
           <Settings className="w-6 h-6 text-[#FFD600]" aria-hidden />
           Settings
         </button>

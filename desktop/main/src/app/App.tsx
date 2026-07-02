@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback, KeyboardEvent } from "react";
 import { Bell, Zap, Eye, Volume2, Settings, CheckCircle2, Monitor, ArrowRight, HelpCircle, ChevronLeft } from "lucide-react";
 import Home from "./screens/Home.tsx";
 import Logs from "./screens/Logs.tsx";
+import SettingsScreen from "./screens/Settings.tsx";
 const STEPS = ["Welcome", "Alert Style", "Display", "Complete", "Home"] as const;
 
 const features = [
@@ -445,6 +446,10 @@ export default function App() {
 
 if (currentView === "logs") {
   return <Logs onNavigate={(screen) => setCurrentView(screen as "home" | "logs")} />;
+}
+
+if (currentView === "settings") {
+  return <SettingsScreen onNavigate={(screen) => setCurrentView(screen)} />;
 }
 
 if (step === 4) {
