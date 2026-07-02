@@ -3,6 +3,7 @@ import { Bell, Zap, Eye, Volume2, Settings, CheckCircle2, Monitor, ArrowRight, H
 import Home from "./screens/Home.tsx";
 import Logs from "./screens/Logs.tsx";
 import SettingsScreen from "./screens/Settings.tsx";
+import ActiveAlert from "./screens/ActiveAlert.tsx";
 const STEPS = ["Welcome", "Alert Style", "Display", "Complete", "Home"] as const;
 
 const features = [
@@ -450,6 +451,10 @@ if (currentView === "logs") {
 
 if (currentView === "settings") {
   return <SettingsScreen onNavigate={(screen) => setCurrentView(screen)} />;
+}
+
+if (currentView === "alerts") {
+  return <ActiveAlert onNavigate={(screen) => setCurrentView(screen)} />;
 }
 
 if (step === 4) {
