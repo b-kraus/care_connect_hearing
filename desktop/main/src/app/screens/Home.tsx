@@ -13,9 +13,14 @@ import MainLayout from "../components/layout/MainLayout";
 const focusRing =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black";
 
-export default function Home() {
+interface HomeProps {
+  // Pass down whatever screen-switching function your app uses (e.g., setScreen, onNavigate, etc.)
+  onNavigate?: (screenName: "home" | "logs") => void;
+}
+
+export default function Home({ onNavigate }: HomeProps) {
   return (
-    <MainLayout>
+    <MainLayout currentView="home" onNavigate={onNavigate}>
       <div className="mb-10">
         <h1 className="text-5xl font-bold mb-4">
           Welcome <span className="text-[#FFD600]">Back!</span>
@@ -40,6 +45,10 @@ export default function Home() {
           title="Alert Logs"
           status="12 recent alerts"
           description="Review confirmed, missed, and past alerts."
+          onClick={() => {
+            // When clicked, invoke navigation function if it exists
+            if (onNavigate) onNavigate("logs");
+          }}
         />
 
         <DashboardCard
@@ -81,15 +90,19 @@ function DashboardCard({
   status,
   description,
   danger = false,
+  onClick,
 }: {
   icon: React.ReactNode;
   title: string;
   status: string;
   description: string;
   danger?: boolean;
+  onClick?: () => void;
 }) {
   return (
     <button
+      onClick={onClick}
+      type="button"
       className={`min-h-64 rounded-2xl border p-8 text-left transition-all hover:scale-[1.01] ${focusRing} ${
         danger
           ? "border-red-500/70 bg-red-950/30 text-red-100"
