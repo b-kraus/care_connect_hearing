@@ -16,6 +16,7 @@ interface LogItem {
 
 interface LogsProps {
   onNavigate?: (screenName: "home" | "logs") => void;
+  onEmergency?: () => void;
 }
 
 const initialLogs: LogItem[] = [
@@ -34,7 +35,7 @@ const initialLogs: LogItem[] = [
   { id: 10, title: "Morning walk reminder", time: "8:30 AM", date: "May 26", section: "MAY 26", status: "missed" },
 ];
 
-export default function Logs({ onNavigate }: LogsProps) {
+export default function Logs({ onNavigate, onEmergency }: LogsProps) {
   const [filter, setFilter] = useState<"all" | "confirmed" | "missed">("all");
 
   // Calculate totals dynamically
@@ -52,8 +53,8 @@ export default function Logs({ onNavigate }: LogsProps) {
   const sections: ("TODAY" | "YESTERDAY" | "MAY 26")[] = ["TODAY", "YESTERDAY", "MAY 26"];
 
   return (
-    <MainLayout currentView="logs" onNavigate={onNavigate}>
-      {/* Top Header Navigation bar match from image_9629a4.png */}
+    <MainLayout currentView="logs" onNavigate={onNavigate} onEmergency={onEmergency}>
+       {/* Top Header Navigation bar match from image_9629a4.png */}
       <div className="flex items-center justify-between border-b border-white/10 pb-6 mb-8">
         <div className="flex items-center gap-4">
           <button

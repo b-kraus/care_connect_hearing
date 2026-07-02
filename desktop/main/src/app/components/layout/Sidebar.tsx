@@ -14,9 +14,10 @@ const focusRing =
 interface SidebarProps {
   currentView?: "home" | "logs" | string;
   onNavigate?: (screenName: "home" | "logs") => void;
+  onEmergency?: () => void; // 1. Added the prop structure definition here
 }
 
-export default function Sidebar({ currentView = "home", onNavigate }: SidebarProps) {
+export default function Sidebar({ currentView = "home", onNavigate, onEmergency }: SidebarProps) { // 2. Received prop here
   return (
     <aside className="w-80 border-r border-[#FFD600]/30 p-7 flex flex-col bg-black text-white">
       <div className="flex items-center gap-4 mb-10">
@@ -77,7 +78,11 @@ export default function Sidebar({ currentView = "home", onNavigate }: SidebarPro
 
       <div className="my-8 border-t border-white/15" />
 
-      <button className={`flex items-center gap-4 px-5 py-4 rounded-xl border border-red-500 text-red-400 hover:bg-red-950/50 font-semibold text-left ${focusRing}`}>
+      {/* EMERGENCY SOS BUTTON */}
+      <button 
+        onClick={() => onEmergency && onEmergency()} // 3. Attached click trigger handle
+        className={`flex items-center gap-4 px-5 py-4 rounded-xl border border-red-500 text-red-400 hover:bg-red-950/50 font-semibold text-left transition-all ${focusRing}`}
+      >
         <AlertTriangle className="w-6 h-6" aria-hidden />
         Emergency SOS
       </button>

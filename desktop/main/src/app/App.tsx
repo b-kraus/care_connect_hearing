@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback, KeyboardEvent } from "react";
 import { Bell, Zap, Eye, Volume2, Settings, CheckCircle2, Monitor, ArrowRight, HelpCircle, ChevronLeft } from "lucide-react";
 import Home from "./screens/Home.tsx";
 import Logs from "./screens/Logs.tsx";
+import Emergency from "./screens/Emergency.tsx";
 const STEPS = ["Welcome", "Alert Style", "Display", "Complete", "Home"] as const;
 
 const features = [
@@ -425,8 +426,9 @@ export default function App() {
   const [step, setStep] = useState(0);
   const [showHelp, setShowHelp] = useState(false);
   
-  // Custom navigation state tracker for views past the onboarding sequence
+  // 1. THESE STATES AND HANDLERS MUST BE PRESENT INSIDE THE COMPONENT:
   const [currentView, setCurrentView] = useState<"onboarding" | "home" | "logs">("onboarding");
+  const [isSosOpen, setIsSosOpen] = useState(false);
 
   const headingRef = useRef<HTMLHeadingElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
@@ -434,26 +436,63 @@ export default function App() {
   /* Move focus to heading whenever the active view changes */
   useEffect(() => {
     headingRef.current?.focus();
-  }, [step, showHelp, currentView]);
+  }, [step, showHelp]);
 
   const next = () => setStep((s) => Math.min(s + 1, STEPS.length - 1));
   const back = () => setStep((s) => Math.max(s - 1, 0));
 
+  // Cleanly close emergency panel and reset state views
+  const handleCloseEmergency = () => {
+    setIsSosOpen(false);
+    setCurrentView("home");
+  };
+
+  // Safe lifecycle synchronizer instead of immediate render-phase execution
+  useEffect(() => {
+    if (step === 4) {
+      setCurrentView("home");
+    }
+  }, [step]);
+
+  /* ── Screen Views router layout intercepts ── */
   if (currentView === "home") {
-  return <Home onNavigate={(screen) => setCurrentView(screen as "home" | "logs")} />;
-}
+    return (
+      <>
+        {Home ? (
+          <Home 
+            onNavigate={(screen) => setCurrentView(screen as "home" | "logs")} 
+            onEmergency={() => setIsSosOpen(true)} 
+          />
+        ) : (
+          <div className="p-8 text-red-500 bg-zinc-900 border border-red-500/20 rounded-xl">
+            <strong>Error:</strong> The Home screen component could not be loaded. Check your import path.
+          </div>
+        )}
+        {isSosOpen && <Emergency onClose={handleCloseEmergency} />}
+      </>
+    );
+  }
 
-if (currentView === "logs") {
-  return <Logs onNavigate={(screen) => setCurrentView(screen as "home" | "logs")} />;
-}
+  if (currentView === "logs") {
+    return (
+      <>
+        {Logs ? (
+          <Logs 
+            onNavigate={(screen) => setCurrentView(screen as "home" | "logs")} 
+            onEmergency={() => setIsSosOpen(true)} 
+          />
+        ) : (
+          <div className="p-8 text-red-500 bg-zinc-900 border border-red-500/20 rounded-xl">
+            <strong>Error:</strong> The Logs component is missing or not exporting correctly. Check <code>src/app/screens/Logs.tsx</code>.
+          </div>
+        )}
+        {isSosOpen && <Emergency onClose={handleCloseEmergency} />}
+      </>
+    );
+  }
 
-if (step === 4) {
-  // If they somehow refreshed here, ensure they are set to home view
-  setCurrentView("home");
-  return <Home onNavigate={(screen) => setCurrentView(screen as "home" | "logs")} />;
-}
-
-return (
+  // 4. Fallback default onboarding setup interface view return block
+  return (
     <>
       {/* Skip link — WCAG 2.4.1 */}
       <a
