@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback, KeyboardEvent } from "react";
 import { Bell, Zap, Eye, Volume2, Settings, CheckCircle2, Monitor, ArrowRight, HelpCircle, ChevronLeft } from "lucide-react";
 import Home from "./screens/Home.tsx";
+import Logs from "./screens/Logs.tsx";
 const STEPS = ["Welcome", "Alert Style", "Display", "Complete", "Home"] as const;
 
 const features = [
@@ -423,19 +424,33 @@ function CompleteStep({
 export default function App() {
   const [step, setStep] = useState(0);
   const [showHelp, setShowHelp] = useState(false);
+  
+  // Custom navigation state tracker for views past the onboarding sequence
+  const [currentView, setCurrentView] = useState<"onboarding" | "home" | "logs">("onboarding");
+
   const headingRef = useRef<HTMLHeadingElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
 
   /* Move focus to heading whenever the active view changes */
   useEffect(() => {
     headingRef.current?.focus();
-  }, [step, showHelp]);
+  }, [step, showHelp, currentView]);
 
- const next = () => setStep((s) => Math.min(s + 1, STEPS.length - 1));
- const back = () => setStep((s) => Math.max(s - 1, 0));
+  const next = () => setStep((s) => Math.min(s + 1, STEPS.length - 1));
+  const back = () => setStep((s) => Math.max(s - 1, 0));
+
+  if (currentView === "home") {
+  return <Home onNavigate={(screen) => setCurrentView(screen as "home" | "logs")} />;
+}
+
+if (currentView === "logs") {
+  return <Logs onNavigate={(screen) => setCurrentView(screen as "home" | "logs")} />;
+}
 
 if (step === 4) {
-    return <Home />;
+  // If they somehow refreshed here, ensure they are set to home view
+  setCurrentView("home");
+  return <Home onNavigate={(screen) => setCurrentView(screen as "home" | "logs")} />;
 }
 
 return (
