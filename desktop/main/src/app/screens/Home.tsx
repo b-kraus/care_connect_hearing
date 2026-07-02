@@ -14,14 +14,13 @@ const focusRing =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black";
 
 interface HomeProps {
-  // Pass down whatever screen-switching function your app uses (e.g., setScreen, onNavigate, etc.)
   onNavigate?: (screenName: "home" | "logs") => void;
+  onEmergency?: () => void;
 }
 
-export default function Home({ onNavigate }: HomeProps) {
+export default function Home({ onNavigate, onEmergency }: HomeProps) {
   return (
-    <MainLayout currentView="home" onNavigate={onNavigate}>
-      <div className="mb-10">
+    <MainLayout currentView="home" onNavigate={onNavigate} onEmergency={onEmergency}><div className="mb-10">
         <h1 className="text-5xl font-bold mb-4">
           Welcome <span className="text-[#FFD600]">Back!</span>
         </h1>
@@ -78,6 +77,7 @@ export default function Home({ onNavigate }: HomeProps) {
           status="Emergency access"
           description="Open emergency action screen."
           danger
+          onClick={() => onEmergency && onEmergency()} 
         />
       </section>
     </MainLayout>
