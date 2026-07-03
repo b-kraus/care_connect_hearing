@@ -14,7 +14,7 @@ const focusRing =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black";
 
 interface HomeProps {
-  onNavigate?: (screenName: "home" | "logs") => void;
+  onNavigate?: (screenName: string) => void;
   onEmergency?: () => void;
 }
 
@@ -36,7 +36,7 @@ export default function Home({ onNavigate, onEmergency }: HomeProps) {
           icon={<Bell className="w-8 h-8" />}
           title="Active Alert"
           status="No active alerts"
-          description="System monitoring in real time."
+          description="System monitoring in real time." onClick={() => { if (onNavigate) onNavigate("alerts"); }}
         />
 
         <DashboardCard
@@ -68,7 +68,7 @@ export default function Home({ onNavigate, onEmergency }: HomeProps) {
           icon={<Settings className="w-8 h-8" />}
           title="Settings"
           status="High contrast enabled"
-          description="Adjust display, text size, alert flash, and notifications."
+          description="Adjust display, text size, alert flash, and notifications." onClick={() => { if (onNavigate) onNavigate("settings"); }}
         />
 
         <DashboardCard

@@ -16,9 +16,9 @@ export default function Settings({ onNavigate }: { onNavigate?: (s: string) => v
           </p>
         </div>
         <div className="bg-white/5 border border-white/10 rounded-xl p-6">
-          <h2 className="text-xl font-semibold mb-4">Vibration Intensity</h2>
+          <h2 className="text-xl font-semibold mb-4">Text Size</h2>
           <input type="range" min="1" max="5" defaultValue="3"
-            className="w-full" aria-label="Vibration intensity" />
+            className="w-full" aria-label="Text size" />
         </div>
         <div className="bg-white/5 border border-white/10 rounded-xl p-6">
           <h2 className="text-xl font-semibold mb-4">High Contrast</h2>
