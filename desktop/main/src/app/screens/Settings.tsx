@@ -28,6 +28,12 @@ export default function Settings({ onNavigate }: { onNavigate?: (s: string) => v
             <span>Enable high contrast mode</span>
           </label>
         </div>
+        <button
+          className="bg-[#FFD600] text-black font-bold px-8 py-3 rounded-lg text-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+          aria-label="Save settings"
+        >
+          Save Changes
+        </button>
       </div>
     </MainLayout>
   );
