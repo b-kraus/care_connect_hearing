@@ -42,7 +42,7 @@ export default function Home({ onNavigate, onEmergency }: HomeProps) {
         <DashboardCard
           icon={<ClipboardList className="w-8 h-8" />}
           title="Alert Logs"
-          status="12 recent alerts"
+          status="Check recent alerts"
           description="Review confirmed, missed, and past alerts."
           onClick={() => {
             // When clicked, invoke navigation function if it exists
@@ -53,22 +53,31 @@ export default function Home({ onNavigate, onEmergency }: HomeProps) {
         <DashboardCard
           icon={<MessageCircle className="w-8 h-8" />}
           title="Read Message"
-          status="3 unread messages"
+          status="Check unread messages"
           description="Open accessible message and transcription view."
+          onClick={() => {
+          if (onNavigate) onNavigate("messages");
+         }}
         />
 
         <DashboardCard
           icon={<Mic className="w-8 h-8" />}
-          title="Hearing Recording"
+          title="Record Message"
           status="Microphone ready"
-          description="Record or review hearing-related messages."
+          description="Record hearing-related messages."
+            onClick={() => {
+          if (onNavigate) onNavigate("recording");
+          }}
         />
 
         <DashboardCard
           icon={<Settings className="w-8 h-8" />}
           title="Settings"
           status="High contrast enabled"
-          description="Adjust display, text size, alert flash, and notifications." onClick={() => { if (onNavigate) onNavigate("settings"); }}
+          description="Adjust display, text size, alert flash, and notifications."
+          onClick={() => {
+          if (onNavigate) onNavigate("settings");
+          }}
         />
 
         <DashboardCard

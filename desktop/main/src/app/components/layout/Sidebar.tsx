@@ -12,8 +12,8 @@ const focusRing =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black";
 
 interface SidebarProps {
-  currentView?: "home" | "logs" | string;
-  onNavigate?: (screenName: "home" | "logs") => void;
+  currentView?: string;
+  onNavigate?: (screenName: string) => void;
   onEmergency?: () => void; // 1. Added the prop structure definition here
 }
 
@@ -67,7 +67,7 @@ export default function Sidebar({ currentView = "home", onNavigate, onEmergency 
 
         <button onClick={() => onNavigate && onNavigate("recording")} className={`flex items-center gap-4 px-5 py-4 rounded-xl hover:bg-[#FFD600]/10 text-left ${focusRing}`}>
           <Mic className="w-6 h-6 text-[#FFD600]" aria-hidden />
-          Hearing Recording
+          Record Message
         </button>
 
         <button onClick={() => onNavigate && onNavigate("settings")} className={`flex items-center gap-4 px-5 py-4 rounded-xl hover:bg-[#FFD600]/10 text-left ${focusRing}`}>

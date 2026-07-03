@@ -5,6 +5,8 @@ import Logs from "./screens/Logs.tsx";
 import Emergency from "./screens/Emergency.tsx";
 import SettingsScreen from "./screens/Settings.tsx";
 import ActiveAlert from "./screens/ActiveAlert.tsx";
+import ReadMessage from "./screens/ReadMessage.tsx";
+import Recording from "./screens/Recording.tsx";
 const STEPS = ["Welcome", "Alert Style", "Display", "Complete", "Home"] as const;
 
 const features = [
@@ -429,7 +431,7 @@ export default function App() {
   const [showHelp, setShowHelp] = useState(false);
   
   // 1. THESE STATES AND HANDLERS MUST BE PRESENT INSIDE THE COMPONENT:
-  const [currentView, setCurrentView] = useState<"onboarding" | "home" | "logs">("onboarding");
+  const [currentView, setCurrentView] = useState<string>("onboarding");
   const [isSosOpen, setIsSosOpen] = useState(false);
 
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -499,6 +501,14 @@ if (currentView === "settings") {
 
 if (currentView === "alerts") {
   return <ActiveAlert onNavigate={(screen) => setCurrentView(screen)} />;
+}
+
+if (currentView === "messages") {
+  return <ReadMessage onNavigate={(screen) => setCurrentView(screen)} />;
+}
+
+if (currentView === "recording") {
+  return <Recording onNavigate={(screen) => setCurrentView(screen)} />;
 }
 
 if (step === 4) {

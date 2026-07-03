@@ -8,7 +8,7 @@ export type ScreenName = string | "settings" | "alerts" | "messages" | "recordin
 interface MainLayoutProps {
   children: ReactNode;
   currentView?: "home" | "logs" | string;
-  onNavigate?: (screenName: "home" | "logs") => void;
+  onNavigate?: (screenName: string) => void;
   onEmergency?: () => void; 
 }
 

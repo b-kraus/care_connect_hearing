@@ -15,7 +15,7 @@ interface LogItem {
 }
 
 interface LogsProps {
-  onNavigate?: (screenName: "home" | "logs") => void;
+  onNavigate?: (screenName: string) => void;
   onEmergency?: () => void;
 }
 
