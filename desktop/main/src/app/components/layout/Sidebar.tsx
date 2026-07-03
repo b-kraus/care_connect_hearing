@@ -60,6 +60,26 @@ export default function Sidebar({ currentView = "home", onNavigate, onEmergency 
           Alert Logs
         </button>
 
+        {/* ACTIVE ALERT BUTTON */}
+        <button
+        type="button"
+        onClick={() => onNavigate?.("alerts")}
+        className={`flex items-center gap-4 px-5 py-4 rounded-xl font-bold text-lg transition-all ${focusRing} ${
+        currentView === "alerts"
+        ? "bg-[#FFD600] text-black"
+        : "hover:bg-[#FFD600]/10 text-white"
+        }`}
+        >
+        <Bell
+        className={`w-6 h-6 ${
+        currentView === "alerts" ? "text-black" : "text-[#FFD600]"
+         }`}
+        aria-hidden
+        />
+        Active Alert
+        </button>
+
+        {/* MESSAGES BUTTON */}
         <button onClick={() => onNavigate && onNavigate("messages")} className={`flex items-center gap-4 px-5 py-4 rounded-xl hover:bg-[#FFD600]/10 text-left ${focusRing}`}>
           <MessageCircle className="w-6 h-6 text-[#FFD600]" aria-hidden />
           Messages
