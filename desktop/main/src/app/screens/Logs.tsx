@@ -5,56 +5,61 @@ import MainLayout from "../components/layout/MainLayout";
 const focusRing =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black";
 
-interface LogItem {
+export interface LogItem {
   id: number;
   title: string;
   time: string;
   date: string;
-  section: "TODAY" | "YESTERDAY" | "MAY 26";
+  section: "TODAY" | "YESTERDAY" | "HISTORICAL";
   status: "confirmed" | "missed";
 }
 
 interface LogsProps {
   onNavigate?: (screenName: string) => void;
   onEmergency?: () => void;
+  // Passing custom logs from a shared state context or parent allows immediate state updates!
+  customLogs?: LogItem[]; 
 }
 
 const initialLogs: LogItem[] = [
-  // TODAY section
-  { id: 1, title: "Take blue pill", time: "6:00 PM", date: "May 28", section: "TODAY", status: "confirmed" },
-  { id: 2, title: "Morning walk reminder", time: "8:30 AM", date: "May 28", section: "TODAY", status: "missed" },
-  { id: 3, title: "Drink water", time: "7:00 AM", date: "May 28", section: "TODAY", status: "confirmed" },
+  // TODAY section (Synchronized with July 5, 2026 timestamp matching image_62e83e.png)
+  { id: 1, title: "Metoprolol Succinate (Take blue pill)", time: "05:20 PM", date: "July 5", section: "TODAY", status: "confirmed" },
+  { id: 2, title: "Morning walk reminder", time: "8:30 AM", date: "July 5", section: "TODAY", status: "missed" },
+  { id: 3, title: "Drink water", time: "7:00 AM", date: "July 5", section: "TODAY", status: "confirmed" },
   // YESTERDAY section
-  { id: 4, title: "Take white pill", time: "9:00 PM", date: "May 27", section: "YESTERDAY", status: "confirmed" },
-  { id: 5, title: "Doctor's appointment", time: "3:00 PM", date: "May 27", section: "YESTERDAY", status: "confirmed" },
-  { id: 6, title: "Evening walk", time: "7:30 PM", date: "May 27", section: "YESTERDAY", status: "missed" },
-  { id: 7, title: "Take blue pill", time: "6:00 PM", date: "May 27", section: "YESTERDAY", status: "confirmed" },
-  // MAY 26 section
-  { id: 8, title: "Take blue pill", time: "6:00 PM", date: "May 26", section: "MAY 26", status: "confirmed" },
-  { id: 9, title: "Drink water", time: "1:00 PM", date: "May 26", section: "MAY 26", status: "confirmed" },
-  { id: 10, title: "Morning walk reminder", time: "8:30 AM", date: "May 26", section: "MAY 26", status: "missed" },
+  { id: 4, title: "Take white pill", time: "9:00 PM", date: "July 4", section: "YESTERDAY", status: "confirmed" },
+  { id: 5, title: "Doctor's appointment", time: "3:00 PM", date: "July 4", section: "YESTERDAY", status: "confirmed" },
+  { id: 6, title: "Evening walk", time: "7:30 PM", date: "July 4", section: "YESTERDAY", status: "missed" },
+  { id: 7, title: "Take blue pill", time: "6:00 PM", date: "July 4", section: "YESTERDAY", status: "confirmed" },
+  // HISTORICAL section
+  { id: 8, title: "Take blue pill", time: "6:00 PM", date: "July 3", section: "HISTORICAL", status: "confirmed" },
+  { id: 9, title: "Drink water", time: "1:00 PM", date: "July 3", section: "HISTORICAL", status: "confirmed" },
+  { id: 10, title: "Morning walk reminder", time: "8:30 AM", date: "July 3", section: "HISTORICAL", status: "missed" },
 ];
 
-export default function Logs({ onNavigate, onEmergency }: LogsProps) {
+export default function Logs({ onNavigate, onEmergency, customLogs }: LogsProps) {
   const [filter, setFilter] = useState<"all" | "confirmed" | "missed">("all");
+  
+  // Use custom logs if supplied from parent state machine, otherwise fallback safely
+  const activeLogs = customLogs || initialLogs;
 
   // Calculate totals dynamically
-  const totalCount = initialLogs.length;
-  const confirmedCount = initialLogs.filter((log) => log.status === "confirmed").length;
-  const missedCount = initialLogs.filter((log) => log.status === "missed").length;
+  const totalCount = activeLogs.length;
+  const confirmedCount = activeLogs.filter((log) => log.status === "confirmed").length;
+  const missedCount = activeLogs.filter((log) => log.status === "missed").length;
 
   // Filter logs based on selection
-  const filteredLogs = initialLogs.filter((log) => {
+  const filteredLogs = activeLogs.filter((log) => {
     if (filter === "all") return true;
     return log.status === filter;
   });
 
-  // Group filtered items by section header
-  const sections: ("TODAY" | "YESTERDAY" | "MAY 26")[] = ["TODAY", "YESTERDAY", "MAY 26"];
+  // Dynamic Grouping section arrays
+  const sections: ("TODAY" | "YESTERDAY" | "HISTORICAL")[] = ["TODAY", "YESTERDAY", "HISTORICAL"];
 
   return (
     <MainLayout currentView="logs" onNavigate={onNavigate} onEmergency={onEmergency}>
-       {/* Top Header Navigation bar match from image_9629a4.png */}
+       {/* Top Header Navigation bar match from image_62e83e.png styling */}
       <div className="flex items-center justify-between border-b border-white/10 pb-6 mb-8">
         <div className="flex items-center gap-4">
           <button
@@ -68,7 +73,7 @@ export default function Logs({ onNavigate, onEmergency }: LogsProps) {
           </button>
           <div className="flex items-center gap-2">
             <div className="w-9 h-9 bg-[#FFD600] rounded-lg flex items-center justify-center font-bold text-black text-xs">
-              👂
+              🔗
             </div>
             <span className="text-sm tracking-wider font-semibold uppercase text-white/60">
               Care Connect Hearing
@@ -78,17 +83,12 @@ export default function Logs({ onNavigate, onEmergency }: LogsProps) {
         <h1 className="text-4xl font-extrabold text-[#FFD600] tracking-tight absolute left-1/2 -translate-x-1/2 hidden md:block">
           Alert History
         </h1>
-        <div className="w-24"></div> {/* Balance spacer */}
+        <div className="w-24"></div>
       </div>
-
-      <h1 className="text-4xl font-extrabold text-[#FFD600] tracking-tight mb-8 md:hidden text-center">
-        Alert History
-      </h1>
 
       {/* Filter Row Controls */}
       <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
         <div className="flex items-center gap-3">
-          {/* ALL FILTER BUTTON */}
           <button
             onClick={() => setFilter("all")}
             className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-lg transition-all border ${focusRing} ${
@@ -100,7 +100,6 @@ export default function Logs({ onNavigate, onEmergency }: LogsProps) {
             All <span className={`text-sm px-2 py-0.5 rounded-full ${filter === "all" ? "bg-black/10 text-black" : "bg-white/10 text-white/70"}`}>{totalCount}</span>
           </button>
 
-          {/* CONFIRMED FILTER BUTTON */}
           <button
             onClick={() => setFilter("confirmed")}
             className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-lg transition-all border ${focusRing} ${
@@ -116,7 +115,6 @@ export default function Logs({ onNavigate, onEmergency }: LogsProps) {
             </span>
           </button>
 
-          {/* MISSED FILTER BUTTON */}
           <button
             onClick={() => setFilter("missed")}
             className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-lg transition-all border ${focusRing} ${
@@ -146,16 +144,14 @@ export default function Logs({ onNavigate, onEmergency }: LogsProps) {
 
           return (
             <div key={section} className="space-y-4">
-              {/* Section Header with Line Divider */}
               <div className="flex items-center justify-between gap-4 text-xs font-bold tracking-widest text-[#FFD600]/60 uppercase">
-                <span className="whitespace-nowrap">{section}</span>
+                <span className="whitespace-nowrap">{section === "HISTORICAL" ? "JULY 3" : section}</span>
                 <div className="w-full h-[1px] bg-white/10"></div>
                 <span className="whitespace-nowrap text-white/40">
                   {sectionItems.length} {sectionItems.length === 1 ? "alert" : "alerts"}
                 </span>
               </div>
 
-              {/* Log List Entries inside this section */}
               <div className="grid grid-cols-1 gap-3">
                 {sectionItems.map((log) => {
                   const isConfirmed = log.status === "confirmed";
@@ -169,7 +165,6 @@ export default function Logs({ onNavigate, onEmergency }: LogsProps) {
                       }`}
                     >
                       <div className="flex items-center gap-5">
-                        {/* Status Icon Indicator Ring */}
                         <div
                           className={`w-12 h-12 rounded-full flex items-center justify-center border-2 ${
                             isConfirmed
@@ -190,7 +185,6 @@ export default function Logs({ onNavigate, onEmergency }: LogsProps) {
                         </div>
                       </div>
 
-                      {/* Right Tag Pill */}
                       <div
                         className={`flex items-center gap-2 px-5 py-2 rounded-xl border text-sm font-bold tracking-wide uppercase ${
                           isConfirmed

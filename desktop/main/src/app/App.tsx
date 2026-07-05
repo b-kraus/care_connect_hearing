@@ -1,14 +1,27 @@
 import { useState, useRef, useEffect, useCallback, KeyboardEvent } from "react";
 import { Bell, Zap, Eye, Volume2, Settings, CheckCircle2, Monitor, ArrowRight, HelpCircle, ChevronLeft } from "lucide-react";
 import Home from "./screens/Home.tsx";
-import Logs from "./screens/Logs.tsx";
+import Logs, { LogItem } from "./screens/Logs.tsx";
 import Emergency from "./screens/Emergency.tsx";
 import SettingsScreen from "./screens/Settings.tsx";
 import ActiveAlert from "./screens/ActiveAlert.tsx";
 import ReadMessage from "./screens/ReadMessage.tsx";
 import Recording from "./screens/Recording.tsx";
+
 const STEPS = ["Welcome", "Alert Style", "Display", "Complete", "Home"] as const;
 
+// Default initial log historical seed records
+const initialLogsSeed: LogItem[] = [
+  { id: 2, title: "Morning walk reminder", time: "8:30 AM", date: "July 5", section: "TODAY", status: "missed" },
+  { id: 3, title: "Drink water", time: "7:00 AM", date: "July 5", section: "TODAY", status: "confirmed" },
+  { id: 4, title: "Take white pill", time: "9:00 PM", date: "July 4", section: "YESTERDAY", status: "confirmed" },
+  { id: 5, title: "Doctor's appointment", time: "3:00 PM", date: "July 4", section: "YESTERDAY", status: "confirmed" },
+  { id: 6, title: "Evening walk", time: "7:30 PM", date: "July 4", section: "YESTERDAY", status: "missed" },
+  { id: 7, title: "Take blue pill", time: "6:00 PM", date: "July 4", section: "YESTERDAY", status: "confirmed" },
+  { id: 8, title: "Take blue pill", time: "6:00 PM", date: "July 3", section: "HISTORICAL", status: "confirmed" },
+  { id: 9, title: "Drink water", time: "1:00 PM", date: "July 3", section: "HISTORICAL", status: "confirmed" },
+  { id: 10, title: "Morning walk reminder", time: "8:30 AM", date: "July 3", section: "HISTORICAL", status: "missed" },
+];
 const features = [
   { icon: Eye,     label: "High Contrast", desc: "Enhanced color ratios for low vision" },
   { icon: Zap,     label: "Visual Flash",  desc: "Screen flashes on incoming alerts" },
@@ -434,6 +447,19 @@ export default function App() {
   const [currentView, setCurrentView] = useState<string>("onboarding");
   const [isSosOpen, setIsSosOpen] = useState(false);
 
+  // Dynamic shared application history state initialized with base logging data
+  const [logsList, setLogsList] = useState<LogItem[]>([
+    { id: 2, title: "Morning walk reminder", time: "8:30 AM", date: "July 5", section: "TODAY", status: "missed" },
+    { id: 3, title: "Drink water", time: "7:00 AM", date: "July 5", section: "TODAY", status: "confirmed" },
+    { id: 4, title: "Take white pill", time: "9:00 PM", date: "July 4", section: "YESTERDAY", status: "confirmed" },
+    { id: 5, title: "Doctor's appointment", time: "3:00 PM", date: "July 4", section: "YESTERDAY", status: "confirmed" },
+    { id: 6, title: "Evening walk", time: "7:30 PM", date: "July 4", section: "YESTERDAY", status: "missed" },
+    { id: 7, title: "Take blue pill", time: "6:00 PM", date: "July 4", section: "YESTERDAY", status: "confirmed" },
+    { id: 8, title: "Take blue pill", time: "6:00 PM", date: "July 3", section: "HISTORICAL", status: "confirmed" },
+    { id: 9, title: "Drink water", time: "1:00 PM", date: "July 3", section: "HISTORICAL", status: "confirmed" },
+    { id: 10, title: "Morning walk reminder", time: "8:30 AM", date: "July 3", section: "HISTORICAL", status: "missed" },
+  ]);
+
   const headingRef = useRef<HTMLHeadingElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
 
@@ -451,6 +477,29 @@ export default function App() {
     setCurrentView("home");
   };
 
+  // Triggers when confirmation is clicked on ActiveAlert screen
+  const handleConfirmMedication = () => {
+    const timestamp = new Date();
+    const formattedTime = timestamp.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+
+    const newlyConfirmedRecord: LogItem = {
+      id: Date.now(),
+      title: "Metoprolol Succinate (Take blue pill)",
+      time: formattedTime, // Dynamic confirm timestamp string 
+      date: "July 5",
+      section: "TODAY",
+      status: "confirmed"
+    };
+
+    // Prepend the confirmation entry into active history state tracking 
+    setLogsList((prev) => [newlyConfirmedRecord, ...prev]);
+    setCurrentView("logs"); // Redirect view to the log history screen
+  };
+
   // Safe lifecycle synchronizer instead of immediate render-phase execution
   useEffect(() => {
     if (step === 4) {
@@ -464,7 +513,7 @@ export default function App() {
       <>
         {Home ? (
           <Home 
-            onNavigate={(screen) => setCurrentView(screen as "home" | "logs")} 
+            onNavigate={(screen) => setCurrentView(screen)} 
             onEmergency={() => setIsSosOpen(true)} 
           />
         ) : (
@@ -482,7 +531,8 @@ export default function App() {
       <>
         {Logs ? (
           <Logs 
-            onNavigate={(screen) => setCurrentView(screen as "home" | "logs")} 
+            customLogs={logsList}
+            onNavigate={(screen) => setCurrentView(screen)} 
             onEmergency={() => setIsSosOpen(true)} 
           />
         ) : (
@@ -495,29 +545,29 @@ export default function App() {
     );
   }
 
-if (currentView === "settings") {
-  return <SettingsScreen onNavigate={(screen) => setCurrentView(screen)} />;
-}
+  if (currentView === "settings") {
+    return <SettingsScreen onNavigate={(screen) => setCurrentView(screen)} />;
+  }
 
-if (currentView === "alerts") {
-  return <ActiveAlert onNavigate={(screen) => setCurrentView(screen)} />;
-}
+  if (currentView === "alerts") {
+    return <ActiveAlert onConfirm={handleConfirmMedication} onNavigate={(screen) => setCurrentView(screen)} />;
+  }
 
-if (currentView === "messages") {
-  return <ReadMessage onNavigate={(screen) => setCurrentView(screen)} />;
-}
+  if (currentView === "messages") {
+    return <ReadMessage onNavigate={(screen) => setCurrentView(screen)} />;
+  }
 
-if (currentView === "recording") {
-  return <Recording onNavigate={(screen) => setCurrentView(screen)} />;
-}
+  if (currentView === "recording") {
+    return <Recording onNavigate={(screen) => setCurrentView(screen)} />;
+  }
 
-if (step === 4) {
-  // If they somehow refreshed here, ensure they are set to home view
-  setCurrentView("home");
-  return <Home onNavigate={(screen) => setCurrentView(screen as "home" | "logs")} />;
-}
+  if (step === 4) {
+    // If they somehow refreshed here, ensure they are set to home view
+    setCurrentView("home");
+    return <Home onNavigate={(screen) => setCurrentView(screen as "home" | "logs")} />;
+  }
 
-return (
+  return (
     <>
       {/* Skip link — WCAG 2.4.1 */}
       <a
