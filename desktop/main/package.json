@@ -8,7 +8,8 @@
     "build": "vite build",
     "dev": "vite",
     "electron": "electron .",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "build-mac": "electron-builder --mac"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
@@ -77,6 +78,7 @@
     "@types/jest": "^30.0.0",
     "@vitejs/plugin-react": "4.7.0",
     "electron": "^42.5.0",
+    "electron-builder": "^26.15.3",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1",
