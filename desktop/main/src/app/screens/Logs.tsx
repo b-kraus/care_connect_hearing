@@ -17,21 +17,17 @@ export interface LogItem {
 interface LogsProps {
   onNavigate?: (screenName: string) => void;
   onEmergency?: () => void;
-  // Passing custom logs from a shared state context or parent allows immediate state updates!
   customLogs?: LogItem[]; 
 }
 
 const initialLogs: LogItem[] = [
-  // TODAY section (Synchronized with July 5, 2026 timestamp matching image_62e83e.png)
   { id: 1, title: "Metoprolol Succinate (Take blue pill)", time: "05:20 PM", date: "July 5", section: "TODAY", status: "confirmed" },
   { id: 2, title: "Morning walk reminder", time: "8:30 AM", date: "July 5", section: "TODAY", status: "missed" },
   { id: 3, title: "Drink water", time: "7:00 AM", date: "July 5", section: "TODAY", status: "confirmed" },
-  // YESTERDAY section
   { id: 4, title: "Take white pill", time: "9:00 PM", date: "July 4", section: "YESTERDAY", status: "confirmed" },
   { id: 5, title: "Doctor's appointment", time: "3:00 PM", date: "July 4", section: "YESTERDAY", status: "confirmed" },
   { id: 6, title: "Evening walk", time: "7:30 PM", date: "July 4", section: "YESTERDAY", status: "missed" },
   { id: 7, title: "Take blue pill", time: "6:00 PM", date: "July 4", section: "YESTERDAY", status: "confirmed" },
-  // HISTORICAL section
   { id: 8, title: "Take blue pill", time: "6:00 PM", date: "July 3", section: "HISTORICAL", status: "confirmed" },
   { id: 9, title: "Drink water", time: "1:00 PM", date: "July 3", section: "HISTORICAL", status: "confirmed" },
   { id: 10, title: "Morning walk reminder", time: "8:30 AM", date: "July 3", section: "HISTORICAL", status: "missed" },
@@ -40,26 +36,22 @@ const initialLogs: LogItem[] = [
 export default function Logs({ onNavigate, onEmergency, customLogs }: LogsProps) {
   const [filter, setFilter] = useState<"all" | "confirmed" | "missed">("all");
   
-  // Use custom logs if supplied from parent state machine, otherwise fallback safely
   const activeLogs = customLogs || initialLogs;
 
-  // Calculate totals dynamically
   const totalCount = activeLogs.length;
   const confirmedCount = activeLogs.filter((log) => log.status === "confirmed").length;
   const missedCount = activeLogs.filter((log) => log.status === "missed").length;
 
-  // Filter logs based on selection
   const filteredLogs = activeLogs.filter((log) => {
     if (filter === "all") return true;
     return log.status === filter;
   });
 
-  // Dynamic Grouping section arrays
   const sections: ("TODAY" | "YESTERDAY" | "HISTORICAL")[] = ["TODAY", "YESTERDAY", "HISTORICAL"];
 
   return (
     <MainLayout currentView="logs" onNavigate={onNavigate} onEmergency={onEmergency}>
-       {/* Top Header Navigation bar match from image_62e83e.png styling */}
+      {/* Top Header Navigation bar */}
       <div className="flex items-center justify-between border-b border-white/10 pb-6 mb-8">
         <div className="flex items-center gap-4">
           <button
@@ -75,12 +67,14 @@ export default function Logs({ onNavigate, onEmergency, customLogs }: LogsProps)
             <div className="w-9 h-9 bg-[#FFD600] rounded-lg flex items-center justify-center font-bold text-black text-xs">
               🔗
             </div>
-            <span className="text-sm tracking-wider font-semibold uppercase text-white/60">
+            <span className="text-sm tracking-wider font-semibold uppercase text-white/70">
               Care Connect Hearing
             </span>
           </div>
         </div>
-        <h1 className="text-4xl font-extrabold text-[#FFD600] tracking-tight absolute left-1/2 -translate-x-1/2 hidden md:block">
+        
+        {/* H1 heading fix: sr-only keeps it screen-reader & test runner friendly on mobile viewports */}
+        <h1 className="text-4xl font-extrabold text-[#FFD600] tracking-tight md:absolute md:left-1/2 md:-translate-x-1/2 sr-only md:not-sr-only">
           Alert History
         </h1>
         <div className="w-24"></div>
@@ -131,7 +125,7 @@ export default function Logs({ onNavigate, onEmergency, customLogs }: LogsProps)
           </button>
         </div>
 
-        <div className="text-white/50 text-base font-medium">
+        <div className="text-white/70 text-base font-medium">
           Showing {filteredLogs.length} of {totalCount} entries
         </div>
       </div>
@@ -144,10 +138,14 @@ export default function Logs({ onNavigate, onEmergency, customLogs }: LogsProps)
 
           return (
             <div key={section} className="space-y-4">
+              {/* Timeline wrapper layout */}
               <div className="flex items-center justify-between gap-4 text-xs font-bold tracking-widest text-[#FFD600]/60 uppercase">
-                <span className="whitespace-nowrap">{section === "HISTORICAL" ? "JULY 3" : section}</span>
-                <div className="w-full h-[1px] bg-white/10"></div>
-                <span className="whitespace-nowrap text-white/40">
+                {/* H2 section structural fix */}
+                <h2 className="whitespace-nowrap text-xs font-bold tracking-widest text-[#FFD600]/60 uppercase m-0">
+                  {section === "HISTORICAL" ? "JULY 3" : section}
+                </h2>
+                <div className="w-full h-[1px] bg-white/10" aria-hidden="true"></div>
+                <span className="whitespace-nowrap text-white/70">
                   {sectionItems.length} {sectionItems.length === 1 ? "alert" : "alerts"}
                 </span>
               </div>
@@ -176,10 +174,11 @@ export default function Logs({ onNavigate, onEmergency, customLogs }: LogsProps)
                         </div>
 
                         <div>
-                          <h2 className="text-2xl font-bold tracking-wide text-white/90">
+                          {/* H3 item heading structural fix nested correctly under H2 parent */}
+                          <h3 className="text-2xl font-bold tracking-wide text-white/90">
                             {log.title}
-                          </h2>
-                          <p className="text-sm font-semibold text-white/40 mt-1">
+                          </h3>
+                          <p className="text-sm font-semibold text-white/70 mt-1">
                             {log.time}, {log.date}
                           </p>
                         </div>

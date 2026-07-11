@@ -5,7 +5,7 @@ interface EmergencyProps {
   onClose: () => void;
 }
 
-export default function Emergency({ onClose }: { onClose: () => void }) {
+export default function Emergency({ onClose }: EmergencyProps) {
   const [isSent, setIsSent] = useState(false);
   const [sliderPos, setSliderPos] = useState(0); // tracks value from 0 to 100
   const trackRef = useRef<HTMLDivElement>(null);
@@ -21,7 +21,7 @@ export default function Emergency({ onClose }: { onClose: () => void }) {
     const percentage = Math.max(0, Math.min(100, (relativeX / maxOffset) * 100));
     setSliderPos(percentage);
 
-    // If slid over 98%, trigger transmission view seen in image_a52981.png
+    // If slid over 98%, trigger transmission view
     if (percentage >= 98) {
       setIsSent(true);
       setSliderPos(100);
@@ -48,8 +48,17 @@ export default function Emergency({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-6 select-none animate-fade-in">
-      {/* Modal Viewframe Main Core Box Container */}
-      <div className="w-full max-w-[850px] bg-[#0a0a0a] border border-[#ff3333]/30 rounded-[24px] flex flex-col overflow-hidden relative shadow-[0_0_50px_rgba(255,0,0,0.15)]">
+      {/* 
+        Modal Viewframe Main Core Box Container 
+        - role="dialog" & aria-modal="true" resolve the 'region' issues.
+        - aria-labelledby dynamically labels the region via the contextual h1 title.
+      */}
+      <div 
+        role="dialog" 
+        aria-modal="true"
+        aria-labelledby="modal-heading"
+        className="w-full max-w-[850px] bg-[#0a0a0a] border border-[#ff3333]/30 rounded-[24px] flex flex-col overflow-hidden relative shadow-[0_0_50px_rgba(255,0,0,0.15)]"
+      >
         
         {/* Top Accent Danger Border Line */}
         <div className={`h-1.5 w-full transition-colors duration-500 ${isSent ? "bg-emerald-500" : "bg-[#ff3b30]"}`} />
@@ -63,7 +72,12 @@ export default function Emergency({ onClose }: { onClose: () => void }) {
             }`}>
               {isSent ? "Emergency Active" : "Emergency Mode"}
             </span>
-            <button onClick={onClose} className="p-2 bg-white/5 hover:bg-white/10 rounded-xl transition-all border border-white/10">
+            {/* Added aria-label to clear 'button-name' compliance audit */}
+            <button 
+              onClick={onClose} 
+              aria-label="Close emergency panel"
+              className="p-2 bg-white/5 hover:bg-white/10 rounded-xl transition-all border border-white/10"
+            >
               <X className="w-5 h-5 text-white/70" />
             </button>
           </div>
@@ -72,16 +86,16 @@ export default function Emergency({ onClose }: { onClose: () => void }) {
         {/* Central Display Block Frame Row */}
         <div className="flex-1 flex flex-col items-center justify-center text-center p-12 max-w-2xl mx-auto min-h-[480px]">
           {!isSent ? (
-            /* ──────────────── PRE-CONFIRMATION UI: image_a52220.png ──────────────── */
+            /* ──────────────── PRE-CONFIRMATION UI ──────────────── */
             <>
               <div className="w-20 h-20 rounded-full border border-red-500/30 bg-red-950/10 flex items-center justify-center text-red-500 mb-6">
                 <AlertTriangle className="w-9 h-9" />
               </div>
 
-              <h1 className="text-[40px] font-black text-[#FFD600] leading-tight mb-4 tracking-tight">
+              <h1 id="modal-heading" className="text-[40px] font-black text-[#FFD600] leading-tight mb-4 tracking-tight">
                 Send Emergency Alert?
               </h1>
-              <p className="text-xl text-white/60 leading-relaxed mb-6">
+              <p className="text-xl text-white/70 leading-relaxed mb-6">
                 Emergency contacts and local services will be notified immediately with your location.
               </p>
 
@@ -90,7 +104,7 @@ export default function Emergency({ onClose }: { onClose: () => void }) {
                 Awaiting Confirmation
               </div>
 
-              <span className="text-xs font-bold tracking-[0.2em] text-white/40 uppercase mb-3">
+              <span className="text-xs font-bold tracking-[0.2em] text-white/70 uppercase mb-3">
                 DRAG TO ACTIVATE SOS
               </span>
 
@@ -99,10 +113,10 @@ export default function Emergency({ onClose }: { onClose: () => void }) {
                 {/* Drag Handle Button */}
                 <div 
                   onMouseDown={() => { isDragging.current = true; }}
-                  style={{ transform: `translateX(${sliderPos * 6.74}px)` }} // Maps dynamic track offset shift layout calculation
+                  style={{ transform: `translateX(${sliderPos * 6.74}px)` }}
                   className="w-[68px] h-[68px] bg-[#FFD600] rounded-full flex items-center justify-center cursor-grab active:cursor-grabbing shadow-lg transition-transform duration-75 ease-out z-10"
                 >
-                  <span className="font-mono text-black font-extrabold text-xl tracking-tighter select-none">❯❯❯</span>
+                  <span className="font-mono text-black font-extrabold text-xl tracking-tighter select-none" aria-hidden="true">❯❯❯</span>
                 </div>
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none w-full">
                   <span className="text-lg font-bold text-white tracking-wide">Slide right to send SOS</span>
@@ -110,7 +124,7 @@ export default function Emergency({ onClose }: { onClose: () => void }) {
               </div>
 
               {/* Slider Meta Tracking Information Row */}
-              <div className="w-full flex justify-between text-xs font-bold text-white/30 tracking-wide px-2 mb-8">
+              <div className="w-full flex justify-between text-xs font-bold text-white/70 tracking-wide px-2 mb-8">
                 <span>Hold and drag →</span>
                 <span>{Math.round(sliderPos)}%</span>
               </div>
@@ -121,13 +135,13 @@ export default function Emergency({ onClose }: { onClose: () => void }) {
               </button>
             </>
           ) : (
-            /* ──────────────── POST-TRANSMISSION UI: image_a52981.png ──────────────── */
+            /* ──────────────── POST-TRANSMISSION UI ──────────────── */
             <>
               <div className="w-24 h-24 rounded-full border-2 border-emerald-500 bg-emerald-950/10 flex items-center justify-center text-emerald-400 mb-8 shadow-[0_0_30px_rgba(16,185,129,0.2)]">
                 <Check className="w-12 h-12" strokeWidth={2.5} />
               </div>
 
-              <h1 className="text-[44px] font-black text-emerald-500 tracking-tight leading-none mb-4">
+              <h1 id="modal-heading" className="text-[44px] font-black text-emerald-500 tracking-tight leading-none mb-4">
                 SOS Alert Sent
               </h1>
               <p className="text-xl text-white/70 leading-relaxed max-w-md mb-8">
@@ -147,8 +161,11 @@ export default function Emergency({ onClose }: { onClose: () => void }) {
           )}
         </div>
 
-        {/* Modal Accessibility Status Bar Footer */}
-        <div className="p-4 bg-black border-t border-white/5 flex items-center justify-between text-xs text-white/30 font-medium px-6 select-none">
+        {/* 
+          Modal Accessibility Status Bar Footer
+          - Kept as a generic <div> structure block to avoid duplicate contentinfo / unique landmark validation errors.
+        */}
+        <div className="p-4 bg-black border-t border-white/5 flex items-center justify-between text-xs text-white/70 font-medium px-6 select-none">
           <span>WCAG 2.1 AA · High-contrast mode</span>
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-white/40" /> GPS</span>

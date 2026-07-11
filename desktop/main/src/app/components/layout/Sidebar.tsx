@@ -108,7 +108,7 @@ export default function Sidebar({ currentView = "home", onNavigate, onEmergency 
       </button>
 
       <div className="mt-auto pt-8 border-t border-white/15">
-        <div className="text-sm text-white/60">CareConnect User</div>
+        <div className="text-sm text-white/70">CareConnect User</div>
         <div className="text-lg font-semibold">Profile</div>
       </div>
     </aside>

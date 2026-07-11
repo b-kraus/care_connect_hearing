@@ -6,7 +6,7 @@ export default function TopMenu() {
     <header className="bg-black text-white">
       <div className="h-12 border-b border-[#FFD600]/30 flex items-center justify-between px-6">
         <div className="font-semibold">CareConnect Hearing</div>
-        <div className="text-sm text-white/60">Device Ready</div>
+        <div className="text-sm text-white/70">Device Ready</div>
       </div>
 
       <nav

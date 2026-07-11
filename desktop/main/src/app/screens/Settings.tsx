@@ -27,44 +27,45 @@ export default function Settings({
 
   const sidebarRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
- const handleSidebarKeyDown = (
-  event: React.KeyboardEvent<HTMLButtonElement>,
-  index: number
-) => {
-  let nextIndex = index;
+  const handleSidebarKeyDown = (
+    event: React.KeyboardEvent<HTMLButtonElement>,
+    index: number
+  ) => {
+    let nextIndex = index;
 
-  switch (event.key) {
-    case "ArrowDown":
-      event.preventDefault();
-      nextIndex = (index + 1) % settingsSections.length;
-      sidebarRefs.current[nextIndex]?.focus();
-      break;
+    switch (event.key) {
+      case "ArrowDown":
+        event.preventDefault();
+        nextIndex = (index + 1) % settingsSections.length;
+        sidebarRefs.current[nextIndex]?.focus();
+        break;
 
-    case "ArrowUp":
-      event.preventDefault();
-      nextIndex =
-        (index - 1 + settingsSections.length) % settingsSections.length;
-      sidebarRefs.current[nextIndex]?.focus();
-      break;
+      case "ArrowUp":
+        event.preventDefault();
+        nextIndex =
+          (index - 1 + settingsSections.length) % settingsSections.length;
+        sidebarRefs.current[nextIndex]?.focus();
+        break;
 
-    case "Home":
-      event.preventDefault();
-      sidebarRefs.current[0]?.focus();
-      break;
+      case "Home":
+        event.preventDefault();
+        sidebarRefs.current[0]?.focus();
+        break;
 
-    case "End":
-      event.preventDefault();
-      sidebarRefs.current[settingsSections.length - 1]?.focus();
-      break;
+      case "End":
+        event.preventDefault();
+        sidebarRefs.current[settingsSections.length - 1]?.focus();
+        break;
 
-    case "Enter":
-    case " ":
-      event.preventDefault();
-      setActiveSection(settingsSections[index]);
-      break;
-  }
-};
+      case "Enter":
+      case " ":
+        event.preventDefault();
+        setActiveSection(settingsSections[index]);
+        break;
+    }
+  };
 
+  // Fixed Toggle: Explicitly cast boolean state to 'true' / 'false' string strings
   const Toggle = ({
     checked,
     onChange,
@@ -78,7 +79,7 @@ export default function Settings({
       type="button"
       onClick={onChange}
       aria-label={label}
-      aria-pressed={checked}
+      aria-pressed={checked ? "true" : "false"}
       className={`w-16 h-8 rounded-full border-2 flex items-center px-1 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
         checked
           ? "bg-[#FFD600] border-[#FFD600] justify-end"
@@ -98,7 +99,7 @@ export default function Settings({
       <h1 className="text-4xl font-bold mb-1">
         <span className="text-[#FFD600]">Settings</span>
       </h1>
-      <p className="text-white/50 mb-6">
+      <p className="text-white/70 mb-6">
         All changes apply immediately — no save required.
       </p>
 
@@ -125,7 +126,7 @@ export default function Settings({
                   type="button"
                   role="tab"
                   id={`settings-tab-${index}`}
-                  aria-selected={isActive}
+                  aria-selected={isActive ? "true" : "false"} // Fixed: Explicit token string
                   aria-controls={`settings-panel-${index}`}
                   tabIndex={isActive ? 0 : -1}
                   onClick={() => setActiveSection(section)}
@@ -145,7 +146,12 @@ export default function Settings({
 
         <section className="space-y-6">
           {activeSection === "Display & Text" && (
-            <div className="border border-[#FFD600]/40 rounded-2xl overflow-hidden bg-white/5">
+            <div
+              id="settings-panel-0"
+              role="tabpanel"
+              aria-labelledby="settings-tab-0"
+              className="border border-[#FFD600]/40 rounded-2xl overflow-hidden bg-white/5"
+            >
               <div className="bg-white/10 px-6 py-5 border-b border-[#FFD600]/30">
                 <h2 className="text-2xl font-bold text-[#FFD600]">
                   Display & Text Size
@@ -157,7 +163,7 @@ export default function Settings({
                   <h3 className="text-xl font-bold text-[#FFD600]">
                     Text Size
                   </h3>
-                  <p className="text-white/60 mb-4">
+                  <p className="text-white/70 mb-4">
                     Adjust body text size across the entire application
                   </p>
 
@@ -191,7 +197,7 @@ export default function Settings({
                     </button>
                   </div>
 
-                  <div className="flex justify-between text-white/40 text-sm mt-2">
+                  <div className="flex justify-between text-white/70 text-sm mt-2">
                     <span>14px Min</span>
                     <span className="text-[#FFD600] font-bold">
                       {textSize}px
@@ -200,7 +206,7 @@ export default function Settings({
                   </div>
 
                   <div className="mt-4 border border-dashed border-[#FFD600]/30 rounded-xl p-5 bg-black">
-                    <p className="text-white/40 uppercase text-sm">
+                    <p className="text-white/70 uppercase text-sm">
                       Live Preview
                     </p>
                     <p
@@ -221,7 +227,7 @@ export default function Settings({
                       <h3 className="text-xl font-bold text-[#FFD600]">
                         High Contrast Mode
                       </h3>
-                      <p className="text-white/60">
+                      <p className="text-white/70">
                         Black background with yellow text recommended for low
                         vision
                       </p>
@@ -238,7 +244,7 @@ export default function Settings({
                       <h3 className="text-xl font-bold text-[#FFD600]">
                         Bold Text
                       </h3>
-                      <p className="text-white/60">
+                      <p className="text-white/70">
                         Increase font weight across all text in the app
                       </p>
                     </div>
@@ -254,7 +260,7 @@ export default function Settings({
                       <h3 className="text-xl font-bold text-[#FFD600]">
                         Reduce Motion
                       </h3>
-                      <p className="text-white/60">
+                      <p className="text-white/70">
                         Minimise transitions and animation effects
                       </p>
                     </div>
@@ -269,108 +275,118 @@ export default function Settings({
             </div>
           )}
 
-              {activeSection === "Alert Flash" && (
-      <div className="border border-[#FFD600]/40 rounded-2xl overflow-hidden bg-white/5">
-        <div className="bg-white/10 px-6 py-5 border-b border-[#FFD600]/30">
-          <h2 className="text-2xl font-bold text-[#FFD600]">
-            Alert Flash Settings
-          </h2>
-        </div>
+          {activeSection === "Alert Flash" && (
+            <div
+              id="settings-panel-1"
+              role="tabpanel"
+              aria-labelledby="settings-tab-1"
+              className="border border-[#FFD600]/40 rounded-2xl overflow-hidden bg-white/5"
+            >
+              <div className="bg-white/10 px-6 py-5 border-b border-[#FFD600]/30">
+                <h2 className="text-2xl font-bold text-[#FFD600]">
+                  Alert Flash Settings
+                </h2>
+              </div>
 
-        <div className="p-6 space-y-6">
-          <div
-            className={`border border-[#FFD600]/30 rounded-xl p-8 bg-black text-center transition ${
-              isTestingFlash ? "bg-[#FFD600] text-black" : "text-white/50"
-            }`}
-            aria-live="polite"
-          >
-            <div className="text-4xl mb-2">⚡</div>
-            <p className="font-bold">Flash Preview Area</p>
-            <p className="text-sm mt-1">Tap “Test Flash” to preview</p>
-          </div>
-
-          <div>
-            <h3 className="text-lg font-bold text-[#FFD600] mb-3">
-              Flash Speed
-            </h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {[
-                ["Slow", "0.5 Hz"],
-                ["Medium", "1 Hz"],
-                ["Fast", "2 Hz"],
-              ].map(([speed, hz]) => (
-                <button
-                  key={speed}
-                  type="button"
-                  onClick={() => setFlashSpeed(speed)}
-                  className={`rounded-xl border py-5 font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
-                    flashSpeed === speed
-                      ? "bg-[#FFD600] text-black border-[#FFD600]"
-                      : "text-[#FFD600] border-[#FFD600]/40 hover:bg-[#FFD600]/10"
+              <div className="p-6 space-y-6">
+                <div
+                  className={`border border-[#FFD600]/30 rounded-xl p-8 bg-black text-center transition ${
+                    isTestingFlash ? "bg-[#FFD600] text-black" : "text-white/70"
                   }`}
-                  aria-pressed={flashSpeed === speed}
+                  aria-live="polite"
                 >
-                  <span className="block text-lg">{speed}</span>
-                  <span className="block text-sm opacity-80">{hz}</span>
-                </button>
-              ))}
-            </div>
+                  <div className="text-4xl mb-2">⚡</div>
+                  <p className="font-bold">Flash Preview Area</p>
+                  <p className="text-sm mt-1">Tap “Test Flash” to preview</p>
+                </div>
 
-            <p className="text-white/40 text-sm mt-3">
-              WCAG 2.3.1: Flashing is limited below 3 flashes per second to reduce
-              seizure and discomfort risk.
-            </p>
-          </div>
+                <div>
+                  <h3 className="text-lg font-bold text-[#FFD600] mb-3">
+                    Flash Speed
+                  </h3>
 
-          <div>
-            <h3 className="text-lg font-bold text-[#FFD600] mb-3">
-              Flash Colour
-            </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    {[
+                      ["Slow", "0.5 Hz"],
+                      ["Medium", "1 Hz"],
+                      ["Fast", "2 Hz"],
+                    ].map(([speed, hz]) => (
+                      <button
+                        key={speed}
+                        type="button"
+                        onClick={() => setFlashSpeed(speed)}
+                        className={`rounded-xl border py-5 font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+                          flashSpeed === speed
+                            ? "bg-[#FFD600] text-black border-[#FFD600]"
+                            : "text-[#FFD600] border-[#FFD600]/40 hover:bg-[#FFD600]/10"
+                        }`}
+                        aria-pressed={flashSpeed === speed ? "true" : "false"} // Fixed: Explicit token string
+                      >
+                        <span className="block text-lg">{speed}</span>
+                        <span className="block text-sm opacity-80">{hz}</span>
+                      </button>
+                    ))}
+                  </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {[
-                ["Yellow", "bg-[#FFD600]"],
-                ["White", "bg-white"],
-                ["Red", "bg-red-500"],
-                ["Blue", "bg-blue-500"],
-              ].map(([color, swatchClass]) => (
+                  <p className="text-white/70 text-sm mt-3">
+                    WCAG 2.3.1: Flashing is limited below 3 flashes per second to
+                    reduce seizure and discomfort risk.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-bold text-[#FFD600] mb-3">
+                    Flash Colour
+                  </h3>
+
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {[
+                      ["Yellow", "bg-[#FFD600]"],
+                      ["White", "bg-white"],
+                      ["Red", "bg-red-500"],
+                      ["Blue", "bg-blue-500"],
+                    ].map(([color, swatchClass]) => (
+                      <button
+                        key={color}
+                        type="button"
+                        onClick={() => setFlashColor(color)}
+                        className={`rounded-xl border py-4 font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+                          flashColor === color
+                            ? "border-[#FFD600] text-[#FFD600] bg-[#FFD600]/10"
+                            : "border-[#FFD600]/30 text-white/70 hover:bg-white/10"
+                        }`}
+                        aria-pressed={flashColor === color ? "true" : "false"} // Fixed: Explicit token string
+                      >
+                        <span
+                          className={`mx-auto mb-2 block h-5 w-5 rounded-full border border-white/40 ${swatchClass}`}
+                        />
+                        <span>{color}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <button
-                  key={color}
                   type="button"
-                  onClick={() => setFlashColor(color)}
-                  className={`rounded-xl border py-4 font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
-                    flashColor === color
-                      ? "border-[#FFD600] text-[#FFD600] bg-[#FFD600]/10"
-                      : "border-[#FFD600]/30 text-white/70 hover:bg-white/10"
-                  }`}
-                  aria-pressed={flashColor === color}
+                  onClick={() => {
+                    setIsTestingFlash(true);
+                    window.setTimeout(() => setIsTestingFlash(false), 400);
+                  }}
+                  className="w-full bg-[#FFD600] text-black font-bold py-4 rounded-xl transition hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                 >
-                  <span
-                    className={`mx-auto mb-2 block h-5 w-5 rounded-full border border-white/40 ${swatchClass}`}
-                  />
-                  <span>{color}</span>
+                  ⚡ Test Flash Alert
                 </button>
-              ))}
+              </div>
             </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => {
-              setIsTestingFlash(true);
-              window.setTimeout(() => setIsTestingFlash(false), 400);
-            }}
-            className="w-full bg-[#FFD600] text-black font-bold py-4 rounded-xl transition hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-          >
-            ⚡ Test Flash Alert
-          </button>
-        </div>
-      </div>
-    )}
+          )}
 
           {activeSection === "Notifications" && (
-            <div className="border border-[#FFD600]/40 rounded-2xl overflow-hidden bg-white/5">
+            <div
+              id="settings-panel-2"
+              role="tabpanel"
+              aria-labelledby="settings-tab-2"
+              className="border border-[#FFD600]/40 rounded-2xl overflow-hidden bg-white/5"
+            >
               <div className="bg-white/10 px-6 py-5 border-b border-[#FFD600]/30">
                 <h2 className="text-2xl font-bold text-[#FFD600]">
                   Notification Preferences
@@ -383,7 +399,7 @@ export default function Settings({
                     <h3 className="text-xl font-bold text-[#FFD600]">
                       Screen Flash
                     </h3>
-                    <p className="text-white/60">
+                    <p className="text-white/70">
                       Full-screen colour flash when an alert arrives
                     </p>
                   </div>
@@ -399,7 +415,7 @@ export default function Settings({
                     <h3 className="text-xl font-bold text-[#FFD600]">
                       Banner Alerts
                     </h3>
-                    <p className="text-white/60">
+                    <p className="text-white/70">
                       Persistent on-screen banners with text and colour
                     </p>
                   </div>
@@ -410,7 +426,7 @@ export default function Settings({
                   />
                 </div>
 
-                <h3 className="uppercase tracking-widest text-white/50 font-bold">
+                <h3 className="uppercase tracking-widest text-white/70 font-bold">
                   Alert Types
                 </h3>
 
@@ -440,7 +456,7 @@ export default function Settings({
                   </div>
                 ))}
 
-                <div className="border border-[#FFD600]/30 rounded-xl p-4 text-white/60">
+                <div className="border border-[#FFD600]/30 rounded-xl p-4 text-white/70">
                   Every colour indicator is paired with a text label — meets{" "}
                   <span className="text-[#FFD600] font-bold">WCAG 1.4.1</span>{" "}
                   Use of Colour.
@@ -455,7 +471,12 @@ export default function Settings({
           )}
 
           {activeSection === "About" && (
-            <div className="border border-[#FFD600]/40 rounded-2xl overflow-hidden bg-white/5">
+            <div
+              id="settings-panel-3"
+              role="tabpanel"
+              aria-labelledby="settings-tab-3"
+              className="border border-[#FFD600]/40 rounded-2xl overflow-hidden bg-white/5"
+            >
               <div className="bg-white/10 px-6 py-5 border-b border-[#FFD600]/30">
                 <h2 className="text-2xl font-bold text-[#FFD600]">
                   About Care Connect Hearing

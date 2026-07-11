@@ -1,4 +1,4 @@
-import { useEffect,useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
   Copy,
@@ -158,26 +158,18 @@ export default function Recording({ onNavigate }: RecordingProps) {
         >
           <ArrowLeft className="w-5 h-5 text-[#FFD600]" aria-hidden />
           Home
-          <kbd className="ml-2 px-2 py-1 rounded bg-white/10 border border-white/20 text-xs">
+          <kbd className="ml-2 px-2 py-1 rounded bg-zinc-800 border border-zinc-700 text-xs text-white">
             Esc
           </kbd>
         </button>
 
         <strong className="text-[#FFD600]">CareConnect Hearing</strong>
 
-        <nav className="flex items-center gap-6 text-white/80" aria-label="Application menu">
-          <button type="button" className={focusRing}>
-            File
-          </button>
-          <button type="button" className={focusRing}>
-            Edit
-          </button>
-          <button type="button" className={focusRing}>
-            View
-          </button>
-          <button type="button" className={focusRing}>
-            Help
-          </button>
+        <nav className="flex items-center gap-6 text-zinc-300" aria-label="Application menu">
+          <button type="button" className={focusRing}>File</button>
+          <button type="button" className={focusRing}>Edit</button>
+          <button type="button" className={focusRing}>View</button>
+          <button type="button" className={focusRing}>Help</button>
         </nav>
 
         <div className="ml-auto flex items-center gap-2 text-green-400 font-bold">
@@ -186,7 +178,7 @@ export default function Recording({ onNavigate }: RecordingProps) {
         </div>
       </header>
 
-      <section className="h-14 border-b border-white/10 flex items-center gap-5 px-5 text-white/70">
+      <section className="h-14 border-b border-white/10 flex items-center gap-5 px-5 text-zinc-300">
         <ToolbarButton icon={<FilePlus />} label="New" shortcut="Ctrl + N" />
         <ToolbarButton icon={<Save />} label="Save" shortcut="Ctrl + S" />
         <ToolbarButton icon={<Printer />} label="Print" shortcut="Ctrl + P" />
@@ -200,7 +192,7 @@ export default function Recording({ onNavigate }: RecordingProps) {
       <div className="flex flex-1 min-h-0">
         <aside className="w-[360px] border-r border-[#FFD600]/20 overflow-auto">
           <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
-            <h2 className="text-sm tracking-[0.25em] text-white/60 font-bold">
+            <h2 className="text-sm tracking-[0.25em] text-zinc-400 font-bold">
               RECENT MESSAGES
             </h2>
             <span className="bg-[#FFD600] text-black rounded-md px-3 py-1 font-bold">7</span>
@@ -211,6 +203,8 @@ export default function Recording({ onNavigate }: RecordingProps) {
               <button
                 type="button"
                 key={item.name}
+                role="option"
+                aria-selected={selectedIndex === index}
                 onClick={() => setSelectedIndex(index)}
                 className={`w-full flex items-center gap-4 px-5 py-4 text-left border-b border-white/5 ${focusRing} ${
                   selectedIndex === index
@@ -218,12 +212,12 @@ export default function Recording({ onNavigate }: RecordingProps) {
                     : "hover:bg-white/5 border-l-4 border-l-transparent"
                 }`}
               >
-                <User className="w-4 h-4 text-white/30" aria-hidden />
+                <User className="w-4 h-4 text-zinc-500" aria-hidden />
                 <span className="flex-1 min-w-0">
                   <span className="block font-bold text-[#FFD600] truncate">{item.name}</span>
-                  <span className="block text-sm text-white/45 truncate">{item.preview}</span>
+                  <span className="block text-sm text-zinc-300 truncate">{item.preview}</span>
                 </span>
-                <span className="text-xs text-white/40">{item.time}</span>
+                <span className="text-xs text-zinc-300">{item.time}</span>
               </button>
             ))}
           </div>
@@ -250,11 +244,11 @@ export default function Recording({ onNavigate }: RecordingProps) {
               <Mic className="w-5 h-5 text-[#FFD600]" aria-hidden />
               <h1 className="text-xl font-bold">Record Message</h1>
             </div>
-            <div className="text-white/45">Thu, Jul 2, 2026</div>
+            <div className="text-zinc-300">Thu, Jul 2, 2026</div>
           </div>
 
           <div className="h-16 border-b border-white/10 px-8 flex items-center gap-4">
-            <span className="text-white/50 tracking-widest text-sm">TO:</span>
+            <span className="text-zinc-400 tracking-widest text-sm">TO:</span>
             <span className="text-lg font-semibold">{recentMessages[selectedIndex].name}</span>
           </div>
 
@@ -267,21 +261,21 @@ export default function Recording({ onNavigate }: RecordingProps) {
               placeholder="Record or type message here..."
             />
 
-            <div className="text-right text-white/35 text-sm">{message.length} chars</div>
+            <div className="text-right text-zinc-400 text-sm">{message.length} chars</div>
           </section>
 
           <div className="h-32 border-t border-white/10 px-8 flex items-center justify-between">
             <div className="flex items-center gap-5">
-              <span className="flex items-center gap-2 text-white/55">
+              <span className="flex items-center gap-2 text-zinc-300">
                 <span
                   className={`w-3 h-3 rounded-full ${
-                    isRecording ? "bg-red-500 animate-pulse" : "bg-white/20"
+                    isRecording ? "bg-red-500 animate-pulse" : "bg-zinc-600"
                   }`}
                 />
                 {isRecording ? "Recording" : "Ready"}
               </span>
 
-              <span className="px-4 py-2 rounded-lg border border-white/15 font-mono text-white/70">
+              <span className="px-4 py-2 rounded-lg border border-white/15 font-mono text-zinc-300">
                 {formattedTime}
               </span>
             </div>
@@ -297,7 +291,8 @@ export default function Recording({ onNavigate }: RecordingProps) {
               >
                 <Mic className="w-5 h-5" aria-hidden />
                 Start Recording
-                <kbd className="ml-2 px-2 py-1 rounded bg-white/15 text-sm">Ctrl+R</kbd>
+                {/* FIXED: Changed bg-white/15 to bg-black/30 for reliable, high-contrast dark text backing */}
+                <kbd className="ml-2 px-2 py-1 rounded bg-black/30 text-sm text-white">Ctrl+R</kbd>
               </button>
 
               <button
@@ -307,7 +302,7 @@ export default function Recording({ onNavigate }: RecordingProps) {
                   setIsRecording(false);
                   setAnnouncement("Recording stopped");
                 }}
-                className={`px-8 py-4 rounded-xl border border-white/15 font-bold disabled:opacity-40 disabled:cursor-not-allowed ${focusRing}`}
+                className={`px-8 py-4 rounded-xl border border-white/15 font-bold text-white disabled:opacity-40 disabled:cursor-not-allowed ${focusRing}`}
               >
                 Stop Recording
               </button>
@@ -322,7 +317,8 @@ export default function Recording({ onNavigate }: RecordingProps) {
               >
                 <Send className="w-5 h-5" aria-hidden />
                 Send
-                <kbd className="ml-2 px-2 py-1 rounded bg-white/15 text-sm">Ctrl+S</kbd>
+                {/* FIXED: Changed bg-white/15 to bg-black/30 for high-contrast dark text backing */}
+                <kbd className="ml-2 px-2 py-1 rounded bg-black/30 text-sm text-white">Ctrl+S</kbd>
               </button>
 
               <button
@@ -333,11 +329,11 @@ export default function Recording({ onNavigate }: RecordingProps) {
                   setIsRecording(false);
                   setAnnouncement("Message cleared");
                 }}
-                className={`px-8 py-4 rounded-xl border border-white/15 text-white/70 font-bold flex items-center gap-3 hover:bg-white/5 ${focusRing}`}
+                className={`px-8 py-4 rounded-xl border border-white/15 text-zinc-300 font-bold flex items-center gap-3 hover:bg-white/5 ${focusRing}`}
               >
                 <Trash2 className="w-5 h-5" aria-hidden />
                 Clear
-                <kbd className="ml-2 px-2 py-1 rounded bg-white/10 text-sm">Esc</kbd>
+                <kbd className="ml-2 px-2 py-1 rounded bg-zinc-800 text-sm text-zinc-300">Esc</kbd>
               </button>
             </div>
 
@@ -353,7 +349,7 @@ export default function Recording({ onNavigate }: RecordingProps) {
         </main>
       </div>
 
-      <footer className="border-t border-[#FFD600]/30 px-5 py-3 flex items-center gap-6 text-sm text-white/70">
+      <footer className="border-t border-[#FFD600]/30 px-5 py-3 flex items-center gap-6 text-sm text-zinc-300">
         <Keyboard className="w-5 h-5 text-[#FFD600]" aria-hidden />
         <strong className="text-[#FFD600]">Keyboard Shortcuts</strong>
         <span>Ctrl+N New</span>
@@ -380,11 +376,11 @@ function ToolbarButton({
   return (
     <button
       type="button"
-      className={`flex items-center gap-2 hover:text-[#FFD600] ${focusRing}`}
+      className={`flex items-center gap-2 hover:text-[#FFD600] text-zinc-300 ${focusRing}`}
     >
       <span className="text-[#FFD600] [&>svg]:w-4 [&>svg]:h-4">{icon}</span>
       <span>{label}</span>
-      <kbd className="ml-1 px-2 py-0.5 rounded bg-white/10 border border-white/15 text-xs">
+      <kbd className="ml-1 px-2 py-0.5 rounded bg-zinc-800 border border-zinc-700 text-xs text-zinc-300">
         {shortcut}
       </kbd>
     </button>

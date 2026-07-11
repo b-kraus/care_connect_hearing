@@ -63,12 +63,12 @@ function StepIndicator({ current }: { current: number }) {
                     ? "bg-primary text-primary-foreground"
                     : i === current
                     ? "bg-primary text-primary-foreground ring-2 ring-primary/30"
-                    : "bg-accent text-muted-foreground"
+                    : "bg-accent text-foreground"
                 }`}
               >
                 {i < current ? <CheckCircle2 className="w-3.5 h-3.5" aria-hidden /> : i + 1}
               </div>
-              <span className={`text-xs font-medium hidden sm:block ${i === current ? "text-foreground" : "text-muted-foreground"}`}>
+              <span className={`text-xs font-medium hidden sm:block ${i === current ? "text-foreground" : "text-foreground"}`}>
                 {label}
               </span>
             </div>
@@ -97,7 +97,7 @@ function HelpScreen({ onBack, headingRef }: { onBack: () => void; headingRef: Re
         <button
           onClick={onBack}
           aria-label="Go back to Welcome"
-          className={`flex items-center justify-center w-9 h-9 rounded-lg border border-border text-muted-foreground hover:bg-accent hover:text-foreground transition-all duration-150 ${ring}`}
+          className={`flex items-center justify-center w-9 h-9 rounded-lg border border-border text-foreground hover:bg-accent hover:text-foreground transition-all duration-150 ${ring}`}
         >
           <ChevronLeft className="w-4 h-4" aria-hidden />
         </button>
@@ -105,7 +105,7 @@ function HelpScreen({ onBack, headingRef }: { onBack: () => void; headingRef: Re
           <h2 id="help-heading" ref={headingRef} tabIndex={-1} className="text-2xl font-bold text-foreground outline-none">
             Help &amp; Explanations
           </h2>
-          <p className="text-xs text-muted-foreground mt-0.5">What each setting means</p>
+          <p className="text-xs text-foreground mt-0.5">What each setting means</p>
         </div>
       </div>
 
@@ -117,7 +117,7 @@ function HelpScreen({ onBack, headingRef }: { onBack: () => void; headingRef: Re
             </div>
             <div className="flex flex-col gap-1">
               <span className="text-sm font-semibold text-foreground">{title}</span>
-              <span className="text-xs text-muted-foreground leading-relaxed">{body}</span>
+              <span className="text-xs text-foreground leading-relaxed">{body}</span>
             </div>
           </li>
         ))}
@@ -149,7 +149,7 @@ function WelcomeStep({
           Welcome to<br />
           <span className="text-primary">Care Connect Hearing</span>
         </h1>
-        <p className="text-muted-foreground text-base leading-relaxed max-w-sm">
+        <p className="text-foreground text-base leading-relaxed max-w-sm">
           Large text, high contrast, and visual alerts are already on.
           You can adjust everything later in Settings.
         </p>
@@ -166,7 +166,7 @@ function WelcomeStep({
         </div>
         <div className="flex flex-col gap-0.5">
           <span className="font-semibold text-foreground text-sm">Example Alert</span>
-          <span className="text-xs text-muted-foreground flex items-center gap-1.5" aria-hidden>
+          <span className="text-xs text-foreground flex items-center gap-1.5" aria-hidden>
             <Zap className="w-3 h-3 text-primary" />
             Visual flash
           </span>
@@ -233,7 +233,7 @@ function AlertStyleStep({ onNext, onBack, headingRef }: { onNext: () => void; on
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-2">
         <h2 id="step-heading" ref={headingRef} tabIndex={-1} className="text-2xl font-bold text-foreground outline-none">Alert Style</h2>
-        <p id="alert-style-desc" className="text-muted-foreground text-sm leading-relaxed">
+        <p id="alert-style-desc" className="text-foreground text-sm leading-relaxed">
           Choose how you want to be notified when an alert arrives.
           Use arrow keys to navigate options.
         </p>
@@ -263,11 +263,11 @@ function AlertStyleStep({ onNext, onBack, headingRef }: { onNext: () => void; on
               }`}
             >
               <div aria-hidden className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${isSelected ? "bg-primary/20" : "bg-secondary"}`}>
-                <Icon className={`w-5 h-5 ${isSelected ? "text-primary" : "text-muted-foreground"}`} />
+                <Icon className={`w-5 h-5 ${isSelected ? "text-primary" : "text-foreground"}`} />
               </div>
               <div className="flex flex-col gap-0.5">
                 <span className="font-semibold text-sm text-foreground">{label}</span>
-                <span className="text-xs text-muted-foreground">{desc}</span>
+                <span className="text-xs text-foreground">{desc}</span>
               </div>
               {isSelected && <CheckCircle2 aria-hidden className="w-5 h-5 text-primary ml-auto shrink-0" />}
             </button>
@@ -319,7 +319,7 @@ function DisplayStep({ onNext, onBack, headingRef }: { onNext: () => void; onBac
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-2">
         <h2 id="step-heading" ref={headingRef} tabIndex={-1} className="text-2xl font-bold text-foreground outline-none">Display Settings</h2>
-        <p className="text-muted-foreground text-sm">Adjust visual preferences for your comfort.</p>
+        <p className="text-foreground text-sm">Adjust visual preferences for your comfort.</p>
       </div>
 
       <div className="flex flex-col gap-6">
@@ -346,7 +346,7 @@ function DisplayStep({ onNext, onBack, headingRef }: { onNext: () => void; onBac
                   className={`py-2 px-3 rounded-lg text-xs font-medium transition-all duration-150 ${ring} ${
                     isSelected
                       ? "bg-primary text-primary-foreground"
-                      : "bg-accent border border-border text-muted-foreground hover:border-primary/30"
+                      : "bg-accent border border-border text-foreground hover:border-primary/30"
                   }`}
                 >
                   {size}
@@ -369,7 +369,7 @@ function DisplayStep({ onNext, onBack, headingRef }: { onNext: () => void; onBac
         <div className="flex items-center justify-between p-4 rounded-xl bg-accent border border-border">
           <div className="flex flex-col gap-0.5" id="contrast-label">
             <span className="text-sm font-semibold text-foreground">High Contrast Mode</span>
-            <span className="text-xs text-muted-foreground">Enhances color ratios for readability</span>
+            <span className="text-xs text-foreground">Enhances color ratios for readability</span>
           </div>
           <button
             role="switch"
@@ -418,7 +418,7 @@ function CompleteStep({
         <h2 id="step-heading" ref={headingRef} tabIndex={-1} className="text-2xl font-bold text-foreground outline-none">
           You&apos;re all set!
         </h2>
-        <p className="text-muted-foreground text-sm leading-relaxed max-w-xs">
+        <p className="text-foreground text-sm leading-relaxed max-w-xs">
           Care Connect Hearing is configured for you. Head to Settings any time to adjust these preferences.
         </p>
       </div>
@@ -429,7 +429,7 @@ function CompleteStep({
         </button>
         <button
           onClick={onRestart}
-          className={`text-sm text-muted-foreground hover:text-foreground transition-colors ${ring} rounded px-2 py-1`}
+          className={`text-sm text-foreground hover:text-foreground transition-colors ${ring} rounded px-2 py-1`}
         >
           Restart setup
         </button>
@@ -601,7 +601,7 @@ export default function App() {
                   Designed for how<br />
                   <span className="text-primary">you hear the world</span>
                 </h2>
-                <p className="text-sm text-muted-foreground leading-relaxed">
+                <p className="text-sm text-foreground leading-relaxed">
                   Accessibility first alerts that keep you connected everywhere
                 </p>
               </div>
@@ -613,12 +613,12 @@ export default function App() {
                     </div>
                     <div className="flex flex-col gap-0.5">
                       <span className="text-sm font-semibold text-foreground">{label}</span>
-                      <span className="text-xs text-muted-foreground">{desc}</span>
+                      <span className="text-xs text-foreground">{desc}</span>
                     </div>
                   </div>
                 ))}
               </div>
-              <div className="mt-auto pt-8 flex items-center gap-2 text-xs text-muted-foreground">
+              <div className="mt-auto pt-8 flex items-center gap-2 text-xs text-foreground">
                 <Settings className="w-3 h-3" />
                 <span>All settings are adjustable after setup</span>
               </div>
@@ -632,14 +632,14 @@ export default function App() {
             {!showHelp && (
               <div className="mb-8 flex flex-col gap-2">
                 <StepIndicator current={step} />
-                <span className="text-xs text-muted-foreground hidden sm:block" aria-hidden>
+                <span className="text-xs text-foreground hidden sm:block" aria-hidden>
                   Step {step + 1} of {STEPS.length}
                 </span>
               </div>
             )}
 
             {/* Keyboard hint bar */}
-            <div className="mb-4 hidden sm:flex items-center gap-4 text-xs text-muted-foreground/60 select-none" aria-hidden>
+            <div className="mb-4 hidden sm:flex items-center gap-4 text-xs text-foreground/60 select-none" aria-hidden>
               <span><kbd className="px-1 py-0.5 rounded border border-border font-mono text-[10px]">Tab</kbd> navigate</span>
               <span><kbd className="px-1 py-0.5 rounded border border-border font-mono text-[10px]">Enter</kbd> select</span>
               <span><kbd className="px-1 py-0.5 rounded border border-border font-mono text-[10px]">↑↓</kbd> options</span>
@@ -669,7 +669,7 @@ export default function App() {
               <div className="w-6 h-6 rounded-lg bg-primary flex items-center justify-center">
                 <Bell className="w-3.5 h-3.5 text-primary-foreground" />
               </div>
-              <span className="text-sm font-semibold text-muted-foreground">Care Connect Hearing</span>
+              <span className="text-sm font-semibold text-foreground">Care Connect Hearing</span>
             </div>
           </main>
         </div>
