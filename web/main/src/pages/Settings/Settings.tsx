@@ -1,39 +1,112 @@
+import { useEffect, useState } from "react";
+
+import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import DashboardLayout from "../../components/layout/DashboardLayout";
+import { Button } from "../../components/ui/Button";
+
+
+ const textSizePixels: Record<number, number> = {
+  1: 14,
+  2: 15,
+  3: 16,
+  4: 18,
+  5: 20,
+};
 
 function Settings() {
+  const [flashSpeed, setFlashSpeed] = useState(3);
+  const [textSize, setTextSize] = useState(3);
+  const [highContrast, setHighContrast] = useState(true);
+
+useEffect(() => {
+  document.documentElement.style.fontSize = `${textSizePixels[textSize]}px`;
+}, [textSize]);
+
   return (
     <DashboardLayout active="settings">
-      <h1 className="text-4xl font-bold mb-6">
-        <span className="text-primary">Settings</span>
-      </h1>
-      <div className="max-w-2xl space-y-6">
-        <div className="bg-surface border border-white/10 rounded-2xl p-6">
-          <h2 className="text-xl font-semibold mb-4">Flash Speed</h2>
-          <input type="range" min="1" max="5" defaultValue="3"
-            className="w-full" aria-label="Flash speed" />
-          <p className="text-white/40 text-sm mt-2">
-            WCAG 2.3.1: Under 3 flashes per second
+      <DashboardHeader
+        title="settings"
+        description="Customize accessibility preferences."
+      />
+
+      <div
+        className={`max-w-2xl space-y-6 ${
+          highContrast
+            ? "[&>div]:border-white/40 [&>div]:bg-black"
+            : "[&>div]:border-white/10"
+        }`}
+      >
+
+        <div className="rounded-2xl border border-white/10 bg-surface p-6">
+          <h2 className="mb-4 text-xl font-semibold">
+            Flash Speed
+          </h2>
+
+          <input
+          type="range"
+          min="1"
+          max="5"
+          value={flashSpeed}
+          onChange={(e) => setFlashSpeed(Number(e.target.value))}
+          className="w-full"
+          aria-label="Flash speed"
+        />
+
+        <p className="mt-2 text-sm text-white/40">
+          Current Speed: {flashSpeed}
+        </p>
+
+        <p className="mt-2 text-sm text-white/40">
+          WCAG 2.3.1: Under 3 flashes per second
+        </p>
+        </div>
+
+        <div className="rounded-2xl border border-white/10 bg-surface p-6">
+          <h2 className="mb-4 text-xl font-semibold">
+            Text Size
+          </h2>
+
+          <input
+          type="range"
+          min="1"
+          max="5"
+          value={textSize}
+          onChange={(e) => setTextSize(Number(e.target.value))}
+          className="w-full"
+          aria-label="Text size"
+        />
+
+        <p className="mt-2 text-sm text-white/40">
+          Current Size: {textSize}
+        </p>
+        </div>
+
+        <div className="rounded-2xl border border-white/10 bg-surface p-6">
+          <h2 className="mb-4 text-xl font-semibold">
+            High Contrast
+          </h2>
+
+          <label className="flex items-center gap-3">
+            <input
+            type="checkbox"
+            checked={highContrast}
+            onChange={(e) => setHighContrast(e.target.checked)}
+            className="w-5 h-5"
+            aria-label="Toggle high contrast"
+          />
+
+            Enable High Contrast Mode
+          </label>
+
+          <p className="mt-3 text-sm text-white/40">
+            Current Setting: {highContrast ? "Enabled" : "Disabled"}
           </p>
         </div>
-        <div className="bg-surface border border-white/10 rounded-2xl p-6">
-          <h2 className="text-xl font-semibold mb-4">Text Size</h2>
-          <input type="range" min="1" max="5" defaultValue="3"
-            className="w-full" aria-label="Text size" />
-        </div>
-        <div className="bg-surface border border-white/10 rounded-2xl p-6">
-          <h2 className="text-xl font-semibold mb-4">High Contrast</h2>
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" defaultChecked
-              className="w-5 h-5" aria-label="Toggle high contrast" />
-            <span>Enable high contrast mode</span>
-          </label>
-        </div>
-        <button
-          className="bg-primary text-black font-bold px-8 py-3 rounded-xl text-lg"
-          aria-label="Save settings"
-        >
+
+        <Button size="lg">
           Save Changes
-        </button>
+        </Button>
+
       </div>
     </DashboardLayout>
   );
