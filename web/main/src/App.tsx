@@ -5,6 +5,9 @@ import SignUp from "./pages/SignUp/SignUp";
 import Home from "./pages/Home/Home";
 import Settings from "./pages/Settings/Settings";
 import Status from "./pages/Status/Status";
+import Alerts from "./pages/Alerts/Alerts";
+import Messages from "./pages/Messages/Messages";
+import Emergency from "./pages/Emergency/Emergency";
 
 function App() {
   return (
@@ -16,7 +19,10 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/status" element={<Status />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/alerts" element={<Alerts />} />
+        <Route path="/messages" element={<Messages />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/emergency" element={<Emergency />} />
       </Routes>
     </BrowserRouter>
   );

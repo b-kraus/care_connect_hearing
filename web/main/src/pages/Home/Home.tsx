@@ -1,9 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import {
-  Bell, ClipboardList, MessageCircle,
-  Settings, AlertTriangle,
+  Bell,
+  MessageCircle,
+  Settings,
+  AlertTriangle,
 } from "lucide-react";
 import DashboardLayout from "../../components/layout/DashboardLayout";
+import DashboardCard from "../../components/dashboard/DashboardCard";
+
 
 function Home() {
   const navigate = useNavigate();
@@ -22,21 +26,15 @@ function Home() {
       <p className="text-white/60 mb-8">Quick access to alerts, messages, and settings.</p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {cards.map((card) => (
-          <button
+          <DashboardCard
             key={card.title}
+            title={card.title}
+            description={card.desc}
+            status={card.status}
+            icon={card.icon}
+            danger={card.danger}
             onClick={() => navigate(card.path)}
-            className={`rounded-2xl border p-6 text-left transition-all hover:scale-[1.01] ${
-              card.danger
-                ? "border-red-500/50 bg-red-950/20 hover:bg-red-950/40"
-                : "border-primary/30 bg-surface hover:bg-primary/10"
-            }`}
-            aria-label={card.title}
-          >
-            <card.icon className={`w-8 h-8 mb-4 ${card.danger ? "text-red-400" : "text-primary"}`} />
-            <h2 className="text-xl font-bold mb-1">{card.title}</h2>
-            <p className={`text-sm mb-2 ${card.danger ? "text-red-300" : "text-primary"}`}>{card.status}</p>
-            <p className="text-white/50 text-sm">{card.desc}</p>
-          </button>
+          />
         ))}
       </div>
     </DashboardLayout>

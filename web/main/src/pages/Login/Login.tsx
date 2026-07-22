@@ -20,7 +20,7 @@ function Login() {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    navigate("/status");
+    navigate("/home");
 };
 
   return (
