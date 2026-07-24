@@ -8,6 +8,7 @@ import Status from "./pages/Status/Status";
 import Alerts from "./pages/Alerts/Alerts";
 import Messages from "./pages/Messages/Messages";
 import Emergency from "./pages/Emergency/Emergency";
+import Welcome from "./pages/Welcome/Welcome";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/messages" element={<Messages />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/emergency" element={<Emergency />} />
+        <Route path="/welcome" element={<Welcome />} />
       </Routes>
     </BrowserRouter>
   );
