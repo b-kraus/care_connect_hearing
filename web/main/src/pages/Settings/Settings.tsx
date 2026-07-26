@@ -14,9 +14,10 @@ import { Button } from "../../components/ui/Button";
 };
 
 function Settings() {
-  const [flashSpeed, setFlashSpeed] = useState(3);
-  const [textSize, setTextSize] = useState(3);
-  const [highContrast, setHighContrast] = useState(true);
+  const [flashSpeed, setFlashSpeed] = useState(() => { const s = localStorage.getItem("settings"); return s ? JSON.parse(s).flashSpeed : 3; });
+  const [textSize, setTextSize] = useState(() => { const s = localStorage.getItem("settings"); return s ? JSON.parse(s).textSize : 3; });
+  const [highContrast, setHighContrast] = useState(() => { const s = localStorage.getItem("settings"); return s ? JSON.parse(s).highContrast : true; });
+  const [saved, setSaved] = useState(false);
 
 useEffect(() => {
   document.documentElement.style.fontSize = `${textSizePixels[textSize]}px`;
@@ -103,9 +104,10 @@ useEffect(() => {
           </p>
         </div>
 
-        <Button size="lg">
+        <Button size="lg" onClick={() => { localStorage.setItem("settings", JSON.stringify({ flashSpeed, textSize, highContrast })); setSaved(true); setTimeout(() => setSaved(false), 2000); }}>
           Save Changes
         </Button>
+        {saved && <p className="text-green-500 font-semibold mt-2">Settings saved successfully!</p>}
 
       </div>
     </DashboardLayout>
