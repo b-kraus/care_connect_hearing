@@ -18,13 +18,13 @@ function Alerts() {
 
   return (
     <DashboardLayout active="alerts">
-      <h1 className="mb-2 text-4xl font-bold">
+      <h1 className="mb-2 text-2xl md:text-4xl font-bold">
         Alert <span className="text-primary">History</span>
       </h1>
       <p className="text-white/60 mb-6">
         View and manage your care alerts.
       </p>
-      <div className="flex gap-2 mb-6">
+      <div className="flex flex-wrap gap-2 mb-6">
         {filters.map(f => (
           <button
             key={f}
