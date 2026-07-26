@@ -14,9 +14,9 @@ import { Button } from "../../components/ui/Button";
 };
 
 function Settings() {
-  const [flashSpeed, setFlashSpeed] = useState(() => { const s = localStorage.getItem("settings"); return s ? JSON.parse(s).flashSpeed : 3; });
-  const [textSize, setTextSize] = useState(() => { const s = localStorage.getItem("settings"); return s ? JSON.parse(s).textSize : 3; });
-  const [highContrast, setHighContrast] = useState(() => { const s = localStorage.getItem("settings"); return s ? JSON.parse(s).highContrast : true; });
+  const [flashSpeed, setFlashSpeed] = useState(() => { try { const s = localStorage.getItem('settings'); return s ? JSON.parse(s).flashSpeed : 3; } catch { return 3; } });
+  const [textSize, setTextSize] = useState(() => { try { const s = localStorage.getItem('settings'); return s ? JSON.parse(s).textSize : 3; } catch { return 3; } });
+  const [highContrast, setHighContrast] = useState(() => { try { const s = localStorage.getItem('settings'); return s ? JSON.parse(s).highContrast : true; } catch { return true; } });
   const [saved, setSaved] = useState(false);
 
 useEffect(() => {
