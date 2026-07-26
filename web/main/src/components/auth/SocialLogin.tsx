@@ -21,7 +21,7 @@ function SocialLogin({
         items-center
         justify-center
         gap-3
-        rounded-xl
+        rounded-full
         border
         border-white/10
         bg-surface
@@ -35,10 +35,11 @@ function SocialLogin({
         hover:bg-white/5
         focus-visible:outline
         focus-visible:outline-2
+        focus-visible:outline-offset-2
         focus-visible:outline-primary
       "
     >
-      <Icon size={20} />
+      <Icon size={20} className="shrink-0" />
 
       <span>Continue with {provider}</span>
     </button>
