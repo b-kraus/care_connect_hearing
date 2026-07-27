@@ -92,6 +92,13 @@ export function SettingsProvider({
     rootFontSizes[textSize] ?? rootFontSizes[3];
   }, [textSize]);
 
+  useEffect(() => {
+  document.documentElement.classList.toggle(
+    "high-contrast",
+    highContrast
+  );
+}, [highContrast]);
+
   return (
     <SettingsContext.Provider
       value={{

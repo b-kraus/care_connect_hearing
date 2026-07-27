@@ -1,2 +1,72 @@
 @import "tailwindcss";
 @import "./styles/theme.css";
+
+html.high-contrast {
+  color-scheme: dark;
+}
+
+html.high-contrast body {
+  background-color: #000;
+  color: #fff;
+}
+
+html.high-contrast a {
+  color: #ffff00;
+}
+
+html.high-contrast button,
+html.high-contrast input,
+html.high-contrast select,
+html.high-contrast textarea {
+  border-color: #fff;
+}
+
+html.high-contrast *:focus-visible {
+  outline: 3px solid #ffff00;
+  outline-offset: 3px;
+}
+
+html.high-contrast .bg-white\/5,
+html.high-contrast .bg-white\/10,
+html.high-contrast .bg-black\/20,
+html.high-contrast .bg-black\/30 {
+  background-color: #000;
+}
+
+html.high-contrast .text-white,
+html.high-contrast .text-white\/70,
+html.high-contrast .text-white\/80 {
+  color: #fff;
+}
+
+html.high-contrast .text-gray-400,
+html.high-contrast .text-gray-500,
+html.high-contrast .text-slate-400,
+html.high-contrast .text-slate-500 {
+  color: #e5e5e5;
+}
+
+html.high-contrast .border-white\/10,
+html.high-contrast .border-white\/20,
+html.high-contrast .border-white\/30 {
+  border-color: #fff;
+}
+
+html.high-contrast .text-yellow-400,
+html.high-contrast .text-yellow-500 {
+  color: #ffff00;
+}
+
+html.high-contrast .bg-red-600,
+html.high-contrast .bg-red-700 {
+  background-color: #000;
+  color: #fff;
+  border: 3px solid #ffff00;
+}
+
+html.high-contrast .text-muted,
+html.high-contrast .text-muted-foreground,
+html.high-contrast [class*="text-gray-"],
+html.high-contrast [class*="text-slate-"] {
+  color: #d9d9d9;
+}

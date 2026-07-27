@@ -76,21 +76,23 @@ describe("Settings Page Component", () => {
   });
 
   it("toggles high contrast mode on and off", async () => {
-    const user = userEvent.setup();
+  const user = userEvent.setup();
 
-    renderSettings();
+  renderSettings();
 
-    const highContrastCheckbox = screen.getByRole("checkbox", {
-      name: /toggle high contrast/i,
-    });
+  const highContrastCheckbox = screen.getByRole("checkbox", {
+    name: /toggle high contrast/i,
+  });
 
-    expect(highContrastCheckbox).toBeChecked();
-    expect(screen.getByText("Current Setting: Enabled")).toBeInTheDocument();
+  expect(highContrastCheckbox).toBeChecked();
+  expect(screen.getByText("Current Setting: Enabled")).toBeInTheDocument();
+  expect(document.documentElement).toHaveClass("high-contrast");
 
-    await user.click(highContrastCheckbox);
+  await user.click(highContrastCheckbox);
 
-    expect(highContrastCheckbox).not.toBeChecked();
-    expect(screen.getByText("Current Setting: Disabled")).toBeInTheDocument();
+  expect(highContrastCheckbox).not.toBeChecked();
+  expect(screen.getByText("Current Setting: Disabled")).toBeInTheDocument();
+  expect(document.documentElement).not.toHaveClass("high-contrast");
   });
 
   it("renders Save Changes action button", () => {
