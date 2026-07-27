@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSettings } from "../../hooks/useSettings";
 
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import DashboardLayout from "../../components/layout/DashboardLayout";
@@ -14,10 +15,15 @@ import { Button } from "../../components/ui/Button";
 };
 
 function Settings() {
-  const [flashSpeed, setFlashSpeed] = useState(() => { try { const s = localStorage.getItem('settings'); return s ? JSON.parse(s).flashSpeed : 3; } catch { return 3; } });
-  const [textSize, setTextSize] = useState(() => { try { const s = localStorage.getItem('settings'); return s ? JSON.parse(s).textSize : 3; } catch { return 3; } });
-  const [highContrast, setHighContrast] = useState(() => { try { const s = localStorage.getItem('settings'); return s ? JSON.parse(s).highContrast : true; } catch { return true; } });
-  const [saved, setSaved] = useState(false);
+ const {
+  flashSpeed,
+  setFlashSpeed,
+  textSize,
+  setTextSize,
+  highContrast,
+  setHighContrast,
+ } = useSettings();
+const [saved, setSaved] = useState(false);
 
 useEffect(() => {
   document.documentElement.style.fontSize = `${textSizePixels[textSize]}px`;
@@ -104,7 +110,13 @@ useEffect(() => {
           </p>
         </div>
 
-        <Button size="lg" onClick={() => { localStorage.setItem("settings", JSON.stringify({ flashSpeed, textSize, highContrast })); setSaved(true); setTimeout(() => setSaved(false), 2000); }}>
+        <Button
+          size="lg"
+          onClick={() => {
+            setSaved(true);
+            setTimeout(() => setSaved(false), 2000);
+          }}
+          >
           Save Changes
         </Button>
         {saved && <p className="text-green-500 font-semibold mt-2">Settings saved successfully!</p>}
