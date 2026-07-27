@@ -1,18 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSettings } from "../../hooks/useSettings";
 
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import { Button } from "../../components/ui/Button";
 
-
- const textSizePixels: Record<number, number> = {
-  1: 14,
-  2: 15,
-  3: 16,
-  4: 18,
-  5: 20,
-};
 
 function Settings() {
  const {
@@ -25,9 +17,6 @@ function Settings() {
  } = useSettings();
 const [saved, setSaved] = useState(false);
 
-useEffect(() => {
-  document.documentElement.style.fontSize = `${textSizePixels[textSize]}px`;
-}, [textSize]);
 
   return (
     <DashboardLayout active="settings">

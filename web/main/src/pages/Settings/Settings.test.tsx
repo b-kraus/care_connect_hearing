@@ -58,7 +58,7 @@ describe("Settings Page Component", () => {
     });
 
     expect(screen.getByText("Current Size: 5")).toBeInTheDocument();
-    expect(document.documentElement.style.fontSize).toBe("20px");
+    expect(document.documentElement.style.fontSize).toBe("22px");
   });
 
   it("updates flash speed when range slider changes", () => {

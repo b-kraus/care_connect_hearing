@@ -79,6 +79,19 @@ export function SettingsProvider({
   );
   }, [flashSpeed, textSize, highContrast]);
 
+  useEffect(() => {
+  const rootFontSizes: Record<number, string> = {
+    1: "14px",
+    2: "16px",
+    3: "18px",
+    4: "20px",
+    5: "22px",
+  };
+
+  document.documentElement.style.fontSize =
+    rootFontSizes[textSize] ?? rootFontSizes[3];
+  }, [textSize]);
+
   return (
     <SettingsContext.Provider
       value={{
