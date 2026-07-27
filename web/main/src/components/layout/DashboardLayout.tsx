@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Bell, ClipboardList, Home, MessageCircle,
-  Settings, AlertTriangle, Menu, X,
+  Settings, AlertTriangle, Menu,
 } from "lucide-react";
 
 type Props = {
