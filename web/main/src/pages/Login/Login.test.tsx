@@ -4,10 +4,15 @@ import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
 import Login from "./Login";
 
-// Mock useNavigate from react-router-dom
+// Mock useNavigate and Link from react-router-dom
 const mockNavigate = vi.fn();
 vi.mock("react-router-dom", () => ({
   useNavigate: () => mockNavigate,
+  Link: ({ to, children, ...props }: any) => (
+    <a href={to} {...props}>
+      {children}
+    </a>
+  ),
 }));
 
 // Mock AuthLayout to render children simply without outer layout dependencies
@@ -21,29 +26,46 @@ vi.mock("../../components/branding/CareConnectLogo", () => ({
 }));
 
 vi.mock("../../components/auth/SocialLogin", () => ({
-  default: ({ provider }: { provider: string }) => (
+  default: ({ provider }: { provider: string; icon?: any }) => (
     <button type="button">Sign in with {provider}</button>
   ),
 }));
 
 describe("Login Page Component", () => {
-  it("renders headers, branding, and input fields", () => {
+  it("renders headers, branding, navigation, and input fields", () => {
     render(<Login />);
 
+    // Branding & Header
     expect(screen.getByTestId("care-connect-logo")).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { level: 1, name: /welcome back/i })
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/sign in to continue to your account/i)
+      screen.getByText(/sign in to continue to your account\./i)
     ).toBeInTheDocument();
 
+    // Form inputs and controls
     expect(screen.getByLabelText(/email address/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/remember me/i)).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /forgot password\?/i })
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /^sign in$/i })
+    ).toBeInTheDocument();
+  });
+
+  it("renders navigation links for Home and Sign up", () => {
+    render(<Login />);
+
+    const homeLink = screen.getByRole("link", { name: /home/i });
+    expect(homeLink).toBeInTheDocument();
+    expect(homeLink).toHaveAttribute("href", "/home");
+
+    const signUpLink = screen.getByRole("link", { name: /sign up/i });
+    expect(signUpLink).toBeInTheDocument();
+    expect(signUpLink).toHaveAttribute("href", "/signup");
   });
 
   it("renders social login provider options", () => {
@@ -77,7 +99,7 @@ describe("Login Page Component", () => {
 
     const emailInput = screen.getByLabelText(/email address/i);
     const passwordInput = screen.getByLabelText(/password/i);
-   const submitButton = screen.getByRole("button", { name: "Sign In" });
+    const submitButton = screen.getByRole("button", { name: /^sign in$/i });
 
     // Type credentials
     await user.type(emailInput, "patient@example.com");

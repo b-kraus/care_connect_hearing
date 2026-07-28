@@ -9,12 +9,16 @@ import Alerts from "./pages/Alerts/Alerts";
 import Messages from "./pages/Messages/Messages";
 import Emergency from "./pages/Emergency/Emergency";
 import Welcome from "./pages/Welcome/Welcome";
+import EmergencyPage from "./pages/EmergencyPage/EmergencyPage";
+import Onboarding from "./pages/Onboarding/Onboarding";
+
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={<Navigate to="/Onboarding
+        " replace />} />
 
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
@@ -24,7 +28,9 @@ function App() {
         <Route path="/messages" element={<Messages />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/emergency" element={<Emergency />} />
+        <Route path="/emergency-page" element={<EmergencyPage />} />
         <Route path="/welcome" element={<Welcome />} />
+        <Route path="/onboarding" element={<Onboarding />} />
       </Routes>
     </BrowserRouter>
   );

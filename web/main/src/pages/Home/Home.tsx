@@ -14,6 +14,7 @@ function Home() {
   const cards = [
     { title: "Active Alerts", desc: "Monitor real-time alerts", icon: Bell, path: "/alerts", status: "No active alerts" },
     { title: "Messages", desc: "Speech-to-text transcription", icon: MessageCircle, path: "/messages", status: "3 unread" },
+    { title: "Status", desc: "View system status", icon: Settings, path: "/status", status: "All systems operational" },
     { title: "Settings", desc: "Accessibility preferences", icon: Settings, path: "/settings", status: "High contrast on" },
     { title: "Emergency SOS", desc: "Send emergency alert", icon: AlertTriangle, path: "/emergency", status: "Ready", danger: true },
   ];
