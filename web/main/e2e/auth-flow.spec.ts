@@ -80,7 +80,7 @@ test.describe("CareConnect Hearing - End to End User Flow", () => {
     // Toggle Microphone / Speech-to-text
     await page.getByRole("button", { name: /start listening/i }).click();
     
-    // Fix: Disambiguate 'Listening...' status using exact match or paragraph text
+    // Disambiguate 'Listening...' status
     await expect(page.getByText("Listening...", { exact: true })).toBeVisible();
     await expect(page.getByText(/Listening\.\.\. transcribed text will appear here/i)).toBeVisible();
 
@@ -103,10 +103,24 @@ test.describe("CareConnect Hearing - End to End User Flow", () => {
     // 7. Emergency SOS Action
     // -------------------------------------------------------------
     await page.goto("/emergency");
-    await expect(page.getByRole("heading", { level: 1, name: /emergency sos/i })).toBeVisible();
 
-    const emergencyBtn = page.getByRole("button", { name: /send emergency alert/i });
-    await expect(emergencyBtn).toBeEnabled();
-    await emergencyBtn.click();
+    // Match exact heading rendered in the Emergency component
+    await expect(page.getByRole("heading", { level: 1, name: /send emergency alert\?/i })).toBeVisible();
+
+    // Locate the custom drag slider
+    const sliderHandle = page.getByRole("slider", { name: /slide right to send emergency alert/i });
+    await expect(sliderHandle).toBeVisible();
+
+    // Perform mouse drag interaction to push slider past activation threshold (>95%)
+    const sliderBox = await sliderHandle.boundingBox();
+    if (sliderBox) {
+      await page.mouse.move(sliderBox.x + sliderBox.width / 2, sliderBox.y + sliderBox.height / 2);
+      await page.mouse.down();
+      await page.mouse.move(sliderBox.x + 600, sliderBox.y + sliderBox.height / 2);
+      await page.mouse.up();
+    }
+
+    // Verify post-transmission success state
+    await expect(page.getByRole("heading", { level: 1, name: /sos alert sent/i })).toBeVisible();
   });
 });
