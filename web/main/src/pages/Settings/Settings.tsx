@@ -48,11 +48,11 @@ const [saved, setSaved] = useState(false);
           aria-label="Flash speed"
         />
 
-        <p className="mt-2 text-sm text-white/40">
+        <p className="mt-2 text-sm text-white/70">
           Current Speed: {flashSpeed}
         </p>
 
-        <p className="mt-2 text-sm text-white/40">
+        <p className="mt-2 text-sm text-white/70">
           WCAG 2.3.1: Under 3 flashes per second
         </p>
         </div>
@@ -72,7 +72,7 @@ const [saved, setSaved] = useState(false);
           aria-label="Text size"
         />
 
-        <p className="mt-2 text-sm text-white/40">
+        <p className="mt-2 text-sm text-white/70">
           Current Size: {textSize}
         </p>
         </div>
@@ -94,7 +94,7 @@ const [saved, setSaved] = useState(false);
             Enable High Contrast Mode
           </label>
 
-          <p className="mt-3 text-sm text-white/40">
+          <p className="mt-3 text-sm text-white/70">
             Current Setting: {highContrast ? "Enabled" : "Disabled"}
           </p>
         </div>

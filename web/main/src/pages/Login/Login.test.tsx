@@ -3,12 +3,25 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
 import Login from "./Login";
+import type {
+  AnchorHTMLAttributes,
+  ReactNode,
+} from "react";
+
+// Define a type for the mocked Link component props
+type MockLinkProps = {
+  to: string;
+  children: ReactNode;
+} & Omit<
+  AnchorHTMLAttributes<HTMLAnchorElement>,
+  "href"
+>;
 
 // Mock useNavigate and Link from react-router-dom
 const mockNavigate = vi.fn();
 vi.mock("react-router-dom", () => ({
   useNavigate: () => mockNavigate,
-  Link: ({ to, children, ...props }: any) => (
+  Link: ({ to, children, ...props }: MockLinkProps) => (
     <a href={to} {...props}>
       {children}
     </a>
@@ -26,7 +39,12 @@ vi.mock("../../components/branding/CareConnectLogo", () => ({
 }));
 
 vi.mock("../../components/auth/SocialLogin", () => ({
-  default: ({ provider }: { provider: string; icon?: any }) => (
+  default: ({
+    provider,
+  }: {
+    provider: string;
+    icon?: ReactNode;
+  }) => (
     <button type="button">Sign in with {provider}</button>
   ),
 }));

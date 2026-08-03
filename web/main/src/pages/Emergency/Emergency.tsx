@@ -10,7 +10,8 @@ export default function Emergency({ onClose }: EmergencyProps) {
   const navigate = useNavigate();
   const [isSent, setIsSent] = useState(false);
   const [sliderPos, setSliderPos] = useState(0); // Tracks percentage 0–100
-  
+  const [trackWidth, setTrackWidth] = useState(0);
+
   const trackRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
 
@@ -52,6 +53,28 @@ export default function Emergency({ onClose }: EmergencyProps) {
     },
     [calculateProgress, isSent]
   );
+  
+  // Measure mouse track after DOM render to ensure accurate width for calculations
+  useEffect(() => {
+  const track = trackRef.current;
+
+  if (!track) {
+    return;
+  }
+
+  const updateTrackWidth = () => {
+    setTrackWidth(track.clientWidth);
+  };
+
+  updateTrackWidth();
+
+  const resizeObserver = new ResizeObserver(updateTrackWidth);
+  resizeObserver.observe(track);
+
+  return () => {
+    resizeObserver.disconnect();
+  };
+  }, []);
 
   // Event Listeners for Mouse and Touch
   useEffect(() => {
@@ -87,7 +110,7 @@ export default function Emergency({ onClose }: EmergencyProps) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-heading"
-        className="w-full max-w-[850px] bg-[#0a0a0a] border border-red-500/30 rounded-[24px] flex flex-col overflow-hidden relative shadow-[0_0_50px_rgba(255,0,0,0.15)]"
+        className="w-full max-w-212.5 bg-[#0a0a0a] border border-red-500/30 rounded-3xl flex flex-col overflow-hidden relative shadow-[0_0_50px_rgba(255,0,0,0.15)]"
       >
         {/* Top Accent Danger Border Line */}
         <div
@@ -98,7 +121,7 @@ export default function Emergency({ onClose }: EmergencyProps) {
 
         {/* Modal Header */}
         <div className="p-6 flex items-center justify-between border-b border-white/5">
-          <div className="text-[#FFD600] font-bold text-lg tracking-wide">
+          <div className="text-primary font-bold text-lg tracking-wide">
             Care Connect Hearing
           </div>
           <div className="flex items-center gap-3">
@@ -122,7 +145,7 @@ export default function Emergency({ onClose }: EmergencyProps) {
         </div>
 
         {/* Modal Main Body */}
-        <div className="flex-1 flex flex-col items-center justify-center text-center p-6 sm:p-12 max-w-2xl mx-auto min-h-[480px]">
+        <div className="flex-1 flex flex-col items-center justify-center text-center p-6 sm:p-12 max-w-2xl mx-auto min-h-120">
           {!isSent ? (
             /* PRE-CONFIRMATION UI */
             <>
@@ -132,7 +155,7 @@ export default function Emergency({ onClose }: EmergencyProps) {
 
               <h1
                 id="modal-heading"
-                className="text-3xl sm:text-[40px] font-black text-[#FFD600] leading-tight mb-4 tracking-tight"
+                className="text-3xl sm:text-[40px] font-black text- leading-tight mb-4 tracking-tight"
               >
                 Send Emergency Alert?
               </h1>
@@ -140,8 +163,8 @@ export default function Emergency({ onClose }: EmergencyProps) {
                 Emergency contacts and local services will be notified immediately with your location.
               </p>
 
-              <div className="flex items-center gap-2 bg-[#d4af37]/5 border border-[#d4af37]/30 text-[#FFD600] font-bold tracking-widest text-xs uppercase px-4 py-2 rounded-lg mb-8">
-                <span className="w-2 h-2 rounded-full bg-[#FFD600] animate-ping" />
+              <div className="flex items-center gap-2 bg-[#d4af37]/5 border border-[#d4af37]/30 text-primary font-bold tracking-widest text-xs uppercase px-4 py-2 rounded-lg mb-8">
+                <span className="w-2 h-2 rounded-full bg-primary animate-ping" />
                 Awaiting Confirmation
               </div>
 
@@ -152,7 +175,7 @@ export default function Emergency({ onClose }: EmergencyProps) {
               {/* Interactive Slider Track */}
               <div
                 ref={trackRef}
-                className="w-full h-[76px] bg-red-950/20 border border-red-500/40 rounded-full relative p-1 flex items-center overflow-hidden mb-3"
+                className="w-full h-19 bg-red-950/20 border border-red-500/40 rounded-full relative p-1 flex items-center overflow-hidden mb-3"
               >
                 {/* Active Progress Overlay */}
                 <div 
@@ -171,11 +194,13 @@ export default function Emergency({ onClose }: EmergencyProps) {
                   onMouseDown={() => { isDragging.current = true; }}
                   onTouchStart={() => { isDragging.current = true; }}
                   style={{
-                    transform: `translateX(${(sliderPos / 100) * (trackRef.current ? trackRef.current.clientWidth - 76 : 0)}px)`,
+                    transform: `translateX(${
+                      (sliderPos / 100) * Math.max(trackWidth - 76, 0)
+                    }px)`,
                   }}
-                  className="w-[68px] h-[68px] bg-[#FFD600] hover:bg-[#ffe033] rounded-full flex items-center justify-center cursor-grab active:cursor-grabbing shadow-lg transition-transform duration-75 ease-out z-10 touch-none"
+                  className="w-17 h-17 bg-primary hover:bg-[#ffe033] rounded-full flex items-center justify-center cursor-grab active:cursor-grabbing shadow-lg transition-transform duration-75 ease-out z-10 touch-none"
                 >
-                  <ChevronsRight className="w-8 h-8 text-black stroke-[3]" />
+                  <ChevronsRight className="w-8 h-8 text-black stroke-3" />
                 </div>
 
                 {/* Track Label */}

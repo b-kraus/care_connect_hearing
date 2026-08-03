@@ -103,24 +103,47 @@ test.describe("CareConnect Hearing - End to End User Flow", () => {
     // 7. Emergency SOS Action
     // -------------------------------------------------------------
     await page.goto("/emergency");
+        await expect(page).toHaveURL(/\/emergency$/);
 
-    // Match exact heading rendered in the Emergency component
-    await expect(page.getByRole("heading", { level: 1, name: /send emergency alert\?/i })).toBeVisible();
+    await expect(
+      page.getByRole("heading", {
+        level: 1,
+        name: /send emergency alert\?/i,
+      })
+    ).toBeVisible();
 
-    // Locate the custom drag slider
-    const sliderHandle = page.getByRole("slider", { name: /slide right to send emergency alert/i });
+    const sliderHandle = page.getByRole("slider", {
+      name: /slide right to send emergency alert/i,
+    });
+
     await expect(sliderHandle).toBeVisible();
+    await expect(sliderHandle).toHaveAttribute("aria-valuenow", "0");
 
-    // Perform mouse drag interaction to push slider past activation threshold (>95%)
     const sliderBox = await sliderHandle.boundingBox();
-    if (sliderBox) {
-      await page.mouse.move(sliderBox.x + sliderBox.width / 2, sliderBox.y + sliderBox.height / 2);
-      await page.mouse.down();
-      await page.mouse.move(sliderBox.x + 600, sliderBox.y + sliderBox.height / 2);
-      await page.mouse.up();
+
+    if (!sliderBox) {
+      throw new Error("Emergency slider bounding box was not available");
     }
 
-    // Verify post-transmission success state
-    await expect(page.getByRole("heading", { level: 1, name: /sos alert sent/i })).toBeVisible();
+    await page.mouse.move(
+      sliderBox.x + sliderBox.width / 2,
+      sliderBox.y + sliderBox.height / 2
+    );
+
+    await page.mouse.down();
+
+    await page.mouse.move(
+      sliderBox.x + 600,
+      sliderBox.y + sliderBox.height / 2
+    );
+
+    await page.mouse.up();
+
+    await expect(
+      page.getByRole("heading", {
+        level: 1,
+        name: /sos alert sent/i,
+      })
+    ).toBeVisible();
   });
 });
